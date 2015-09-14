@@ -89,7 +89,7 @@
                 data = data ? data.replace(regexp, '') : '';
 
                 var cssStatus = isFree ? 'parking' : 'parking occupied';
-                var newHtml = '<img src="./img/parking-filler.png" id="' + parking.id + '" class="' + cssStatus + '">';
+                var newHtml = '<img src="./img/parking-filler.png" id="' + parking.id + '" class="' + cssStatus + '" />';
 
                 data = data.replace('<img src="./img/parking-filler.png" id="' + parking.id + '" class="parking" />', newHtml);
                 data = data.replace('<img src="./img/parking-filler.png" id="' + parking.id + '" class="parking occupied" />', newHtml);
