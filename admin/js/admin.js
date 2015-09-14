@@ -85,7 +85,7 @@
             if (callStatus.isOK) {
                 //alert('file loaded: \r\n' + file.data);
                 var data = file.data;
-                var regexp = /([^a-z0-9!{}<>/\;&#\:\ \=\\r\\n\\t\"\'\%\*\-\.\,\(\)])/gi;
+                var regexp = /([^a-z0-9!{}<>/\;&#\:\ \=\\r\\n\\t\"\'\%\*\-\.\,\(\)\@])/gi;
                 data = data ? data.replace(regexp, '') : '';
 
                 var cssStatus = isFree ? 'parking' : 'parking occupied';
