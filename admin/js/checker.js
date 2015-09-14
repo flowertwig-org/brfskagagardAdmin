@@ -24,6 +24,6 @@
     if (token) 
     {
         // Load admin script(s)
-        includeScript('./js/admin.js');
+        includeScript('/admin/js/admin.js');
     }
 })();

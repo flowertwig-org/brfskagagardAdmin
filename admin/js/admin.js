@@ -67,11 +67,38 @@
         }, 100);
     }
 
+    function updateParking(parking, isFree) {
+        if (isFree) {
+            parking.className = 'parking occupied';
+            parking.src = './img/parking-filler-occupied.png';
+        } else {
+            parking.className = 'parking';
+            parking.src = './img/parking-filler-free.png';
+        }
+        parking.style.display = 'block';
+        parking.style.opacity = 0.5;
+        parking.style.cursor = 'pointer';
+    }
+
+    function parkingPage() {
+        var parkings = document.getElementsByClassName('parking');
+        for (var i = 0; i < parkings.length; i++) {
+            var parking = parkings[i];
+            var isFree = parking.className.indexOf('occupied') >= 0;
+            updateParking(parking, isFree);
+            parking.addEventListener('click', function () {
+                console.log('this:', this);
+                var isFree = this.className.indexOf('occupied') >= 0;
+                updateParking(this, !isFree);
+            });
+        }
+    }
+
     function loadAdminState(token) {
-        includeScript('./js/jStorage.js');
+        includeScript('/admin/js/jStorage.js');
 
         ensureLoaded('jStorage', window, function () {
-            includeScript('./js/jStorage.github.js');
+            includeScript('/admin/js/jStorage.github.js');
             ensureLoaded('github', jStorage.providers, function () {
                 self.storage = jStorage({
                     'name': 'github',
@@ -85,23 +112,31 @@
                                 showNavigation();
                                 removeLogin();
                             }
-                            storage.get('parking-test.html', function (file, callStatus) {
-                                storage.get('parking.html', function (file, callStatus) {
-                                    if (callStatus.isOK) {
-                                        //alert('file loaded: \r\n' + file.data);
-                                        var data = file.data;
-                                        var regexp = /([^a-z0-9!{}<>/\;&#\:\ \=\\r\\n\\t\"\'\%\*\-\.\(\)])/gi;
-                                        data = data ? data.replace(regexp, '') : '';
-                                        storage.set('parking-test.html', data, function (fileMeta, callStatus) {
-                                            if (callStatus.isOK) {
-                                                alert('done');
-                                            } else {
-                                                alert('fail');
-                                            }
-                                        });
-                                    }
-                                });
-                            });
+
+                            switch (location.pathname) {
+                                case '/parking.html':
+                                    parkingPage(storage);
+                                    break;
+                                default:
+                                    break;
+                            }
+                            //storage.get('parking-test.html', function (file, callStatus) {
+                            //    storage.get('parking.html', function (file, callStatus) {
+                            //        if (callStatus.isOK) {
+                            //            //alert('file loaded: \r\n' + file.data);
+                            //            var data = file.data;
+                            //            var regexp = /([^a-z0-9!{}<>/\;&#\:\ \=\\r\\n\\t\"\'\%\*\-\.\(\)])/gi;
+                            //            data = data ? data.replace(regexp, '') : '';
+                            //            storage.set('parking-test.html', data, function (fileMeta, callStatus) {
+                            //                if (callStatus.isOK) {
+                            //                    alert('done');
+                            //                } else {
+                            //                    alert('fail');
+                            //                }
+                            //            });
+                            //        }
+                            //    });
+                            //});
                         } else {
                             alert('Ogiltigt personligt åtkomsttoken.');
                             writeCookie(cookieName, '');
