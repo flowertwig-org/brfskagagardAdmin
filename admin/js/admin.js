@@ -80,6 +80,33 @@
         parking.style.cursor = 'pointer';
     }
 
+    function storeParkingUpdate(parking, isFree) {
+        self.storage.get('parking.html', function (file, callStatus) {
+            if (callStatus.isOK) {
+                //alert('file loaded: \r\n' + file.data);
+                var data = file.data;
+                var regexp = /([^a-z0-9!{}<>/\;&#\:\ \=\\r\\n\\t\"\'\%\*\-\.\,\(\)])/gi;
+                data = data ? data.replace(regexp, '') : '';
+
+                var cssStatus = isFree ? 'parking' : 'parking occupied';
+                var newHtml = '<img src="./img/parking-filler.png" id="' + parking.id + '" class="' + cssStatus + '">';
+
+                data = data.replace('<img src="./img/parking-filler.png" id="' + parking.id + '" class="parking" />', newHtml);
+                data = data.replace('<img src="./img/parking-filler.png" id="' + parking.id + '" class="parking occupied" />', newHtml);
+
+                data = data ? data.replace(regexp, '') : '';
+
+                self.storage.set('parking.html', data, function (fileMeta, callStatus) {
+                    if (callStatus.isOK) {
+                        alert('done updating parking');
+                    } else {
+                        alert('fail to update parking, please refresh page');
+                    }
+                });
+            }
+        });
+    }
+
     function parkingPage() {
         var parkings = document.getElementsByClassName('parking');
         for (var i = 0; i < parkings.length; i++) {
@@ -87,8 +114,8 @@
             var isFree = parking.className.indexOf('occupied') >= 0;
             updateParking(parking, isFree);
             parking.addEventListener('click', function () {
-                console.log('this:', this);
                 var isFree = this.className.indexOf('occupied') >= 0;
+                storeParkingUpdate(this, isFree);
                 updateParking(this, !isFree);
             });
         }
