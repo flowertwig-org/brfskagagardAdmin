@@ -49,6 +49,31 @@ body {
     background-position-y: 30%;
     background-size: cover;
 }
+.mood-call-to-action-container {
+    height: auto;
+    padding: 50px 20px;
+}
+
+.call-to-action {
+    margin: 0 auto;
+    width: 500px;
+    background-color: white;
+    background: rgba(255,255,255,.85);
+    padding: 1px 25px;
+    text-align: center;
+}
+    .call-to-action input {
+        width: 70%;
+    }
+
+@media (max-width: 600px) {
+    .call-to-action {
+        width: 70%;
+    }
+    .call-to-action input {
+        width: 100%;
+    }
+}
 
 .breadcrum {
     margin-top: 20px;
@@ -202,18 +227,23 @@ body {
         height: auto;
         border: 0;
     }
+
     .header {
         display: none;
     }
+
     .breadcrum {
         display: none;
     }
+
     .no-print {
         display: none !important;
     }
+
     .only-print {
         display: block;
     }
+
     .print-center {
         text-align: center !important;
     }
