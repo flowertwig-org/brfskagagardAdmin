@@ -132,15 +132,16 @@
 
             //console.log('editor', editor);
             //console.log('container', editor.bodyElement);
-            var content = editor.bodyElement.innerHTML;
+            var container = editor.bodyElement;
+            var content = container.innerHTML;
             content = encodetoHtml(content);
             content = content.replace(regexp, '');
             //console.log('Current HTML', content);
-            var orginalContent = editor.startContent;
-            orginalContent = encodetoHtml(orginalContent);
-            orginalContent = orginalContent.replace(regexp, '');
-            orginalContent = orginalContent.replace(/&#8211; /gi, '');
-            orginalContent = orginalContent.replace(/[ ]{2}/gi, ' ');
+            //var orginalContent = editor.startContent;
+            //orginalContent = encodetoHtml(orginalContent);
+            //orginalContent = orginalContent.replace(regexp, '');
+            //orginalContent = orginalContent.replace(/&#8211; /gi, '');
+            //orginalContent = orginalContent.replace(/[ ]{2}/gi, ' ');
             //console.log('Orginal HTML', orginalContent);
             //console.log('storage', self.storage);
             //console.log('resourceName', resourceName);
@@ -151,31 +152,62 @@
                     var data = file.data;
                     data = data ? data.replace(regexp, '') : '';
 
-                    //var encodedOrginal = encodetoHtml(orginalContent);
-                    //encodedOrginal = encodedOrginal.replace(regexp, '');
+                    var index = data.indexOf('id="main"');
+                    index = data.indexOf('>', index);
+                    index++;
 
-                    //var index = data.indexOf('id="main"');
-                    //index = data.indexOf('>', index);
-                    //index++;
-                    //data = data.substring(index);
 
-                    var test = /^[ ]+</
-                    data = data.replace(test, "<");
+                    var tagName = container.tagName.toLowerCase();
+                    var tmp = data.substring(index);
 
-                    test = />[ ]+</gi
-                    data = data.replace(test, "><");
-                    test = /[ ]+<\/p/gi
-                    data = data.replace(test, "</p");
-                    test = /[ ]{2}/gi
-                    data = data.replace(test, ' ');
-                    //console.log(data);
+                    var endIndex = 0;
+                    var startIndex = 0;
+                    var tagsInMemory = 0;
+
+                    var found = false;
+                    var insanityIndex = 0;
+                    while (!found && insanityIndex < 10000) {
+                        insanityIndex++;
+                        endIndex = tmp.indexOf('</' + tagName, endIndex);
+                        startIndex = tmp.indexOf('<' + tagName, startIndex);
+
+                        if (startIndex == -1) {
+                            // we have not found a start tag of same type so we have found our end tag.
+                            if (tagsInMemory == 0) {
+                                tmp = tmp.substring(0, endIndex);
+                                found = true;
+                            } else {
+                                tagsInMemory--;
+                                endIndex += tagName.length + 2;
+                                startIndex = endIndex;
+                            }
+                        } else if (endIndex < startIndex) {
+                            // start tag was found after our end tag so we have found our end tag.
+                            if (tagsInMemory == 0) {
+                                tmp = tmp.substring(0, endIndex);
+                                found = true;
+                            } else {
+                                tagsInMemory--;
+                                endIndex += tagName.length + 2;
+                                startIndex = endIndex;
+                            }
+                        } else {
+                            tagsInMemory++;
+                            startIndex += tagName.length + 1;
+                            endIndex = startIndex;
+                        }
+                    }
+
+                    tmp = tmp.substring(0, endIndex);
+                    console.log(tmp);
+
 
                     //if (data.indexOf(orginalContent) >= 0) {
-                    if (data.indexOf(orginalContent) >= 0) {
+                    if (data.indexOf(tmp) >= 0) {
                         console.log('found orginal');
 
                         // We have not reproduced same start content, now, replace it :)
-                        var newData = data.replace(orginalContent, content);
+                        var newData = data.replace(tmp, content);
                         self.storage.set(resourceName, newData, function (fileMeta, callStatus) {
                             if (callStatus.isOK) {
                                 alert('saved');
@@ -187,26 +219,7 @@
                     } else {
                         alert('fail, error code: 2');
                         console.log('no match');
-
-                        var index = data.indexOf('id="main"');
-                        index = data.indexOf('>', index);
-                        index++;
-                        data = data.substring(index);
-
-                        for (var i = 0; i < data.length; i++) {
-                            if (data[i] != orginalContent[i]) {
-                                console.log(data.substring(0, i + 1));
-                                console.log(orginalContent.substring(0, i + 1));
-
-                                console.log('error:', i, data.charCodeAt(i), orginalContent.charCodeAt(i));
-                                break;
-                            }
-                        }
                     }
-
-                    localStorage.setItem(editor.bodyElement.id + "-data", data);
-                    localStorage.setItem(editor.bodyElement.id + "-orginalContent", orginalContent);
-                    localStorage.setItem(editor.bodyElement.id, content);
                 }
             });
         }
