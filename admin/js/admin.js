@@ -127,36 +127,85 @@
     }
     function storeDefaultPage(editor) {
         if (editor && editor.startContent) {
+            var regexp = /([^a-z0-9!{}<>/\;&#\:\ \=\\r\\n\\t\"\'\%\*\-\.\,\(\)\@])/gi;
             var resourceName = location.pathname.substring(1);
 
-            console.log('editor', editor);
+            //console.log('editor', editor);
             //console.log('container', editor.bodyElement);
             var content = editor.bodyElement.innerHTML;
-            console.log('Current HTML', content);
+            content = encodetoHtml(content);
+            content = content.replace(regexp, '');
+            //console.log('Current HTML', content);
             var orginalContent = editor.startContent;
-            console.log('Orginal HTML', orginalContent);
+            orginalContent = encodetoHtml(orginalContent);
+            orginalContent = orginalContent.replace(regexp, '');
+            orginalContent = orginalContent.replace(/&#8211; /gi, '');
+            orginalContent = orginalContent.replace(/[ ]{2}/gi, ' ');
+            //console.log('Orginal HTML', orginalContent);
             //console.log('storage', self.storage);
-            console.log('resourceName', resourceName);
+            //console.log('resourceName', resourceName);
 
             self.storage.get(resourceName, function (file, callStatus) {
                 if (callStatus.isOK) {
                     //alert('file loaded: \r\n' + file.data);
                     var data = file.data;
-                    var regexp = /([^a-z0-9!{}<>/\;&#\:\ \=\\r\\n\\t\"\'\%\*\-\.\,\(\)\@])/gi;
                     data = data ? data.replace(regexp, '') : '';
 
-                    var encodedOrginal = encodetoHtml(orginalContent);
-                    encodedOrginal = encodedOrginal.replace(regexp, '');
-                    if (data.indexOf(encodedOrginal) >= 0) {
+                    //var encodedOrginal = encodetoHtml(orginalContent);
+                    //encodedOrginal = encodedOrginal.replace(regexp, '');
+
+                    //var index = data.indexOf('id="main"');
+                    //index = data.indexOf('>', index);
+                    //index++;
+                    //data = data.substring(index);
+
+                    var test = /^[ ]+</
+                    data = data.replace(test, "<");
+
+                    test = />[ ]+</gi
+                    data = data.replace(test, "><");
+                    test = /[ ]+<\/p/gi
+                    data = data.replace(test, "</p");
+                    test = /[ ]{2}/gi
+                    data = data.replace(test, ' ');
+                    //console.log(data);
+
+                    //if (data.indexOf(orginalContent) >= 0) {
+                    if (data.indexOf(orginalContent) >= 0) {
                         console.log('found orginal');
+
+                        // We have not reproduced same start content, now, replace it :)
+                        var newData = data.replace(orginalContent, content);
+                        self.storage.set(resourceName, newData, function (fileMeta, callStatus) {
+                            if (callStatus.isOK) {
+                                alert('saved');
+                            } else {
+                                alert('fail, error code: 1');
+                            }
+                        });
+
                     } else {
+                        alert('fail, error code: 2');
                         console.log('no match');
+
+                        var index = data.indexOf('id="main"');
+                        index = data.indexOf('>', index);
+                        index++;
+                        data = data.substring(index);
+
+                        for (var i = 0; i < data.length; i++) {
+                            if (data[i] != orginalContent[i]) {
+                                console.log(data.substring(0, i + 1));
+                                console.log(orginalContent.substring(0, i + 1));
+
+                                console.log('error:', i, data.charCodeAt(i), orginalContent.charCodeAt(i));
+                                break;
+                            }
+                        }
                     }
 
-                    var index = data.indexOf('id="main"');
-                    console.log(data.substring(index));
-                    localStorage.setItem(editor.bodyElement.id + "-file", data.substring(index));
-                    localStorage.setItem(editor.bodyElement.id + "-org", encodedOrginal);
+                    localStorage.setItem(editor.bodyElement.id + "-data", data);
+                    localStorage.setItem(editor.bodyElement.id + "-orginalContent", orginalContent);
                     localStorage.setItem(editor.bodyElement.id, content);
                 }
             });
