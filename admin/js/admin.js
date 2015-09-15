@@ -52,6 +52,11 @@
         return token;
     }
 
+    function encodetoHtml(data) {
+        var toHtmlCode = function (char) { return '&#' + char.charCodeAt('0') + ';'; };
+        return data.replace(/([^a-z0-9!{}<>/\;&#\:\ \=\\r\\n\\t\"\'\%\*\-\.\,\(\)\@])/gi, toHtmlCode);
+    }
+
     function getToken() {
         var token = readCookie(cookieName);
         return sanitizeToken(token);
@@ -120,6 +125,58 @@
             });
         }
     }
+    function storeDefaultPage(editor) {
+        if (editor && editor.startContent) {
+            var resourceName = location.pathname.substring(1);
+
+            console.log('editor', editor);
+            //console.log('container', editor.bodyElement);
+            var content = editor.bodyElement.innerHTML;
+            console.log('Current HTML', content);
+            var orginalContent = editor.startContent;
+            console.log('Orginal HTML', orginalContent);
+            //console.log('storage', self.storage);
+            console.log('resourceName', resourceName);
+
+            self.storage.get(resourceName, function (file, callStatus) {
+                if (callStatus.isOK) {
+                    //alert('file loaded: \r\n' + file.data);
+                    var data = file.data;
+                    var regexp = /([^a-z0-9!{}<>/\;&#\:\ \=\\r\\n\\t\"\'\%\*\-\.\,\(\)\@])/gi;
+                    data = data ? data.replace(regexp, '') : '';
+
+                    var encodedOrginal = encodetoHtml(orginalContent);
+                    encodedOrginal = encodedOrginal.replace(regexp, '');
+                    if (data.indexOf(encodedOrginal) >= 0) {
+                        console.log('found orginal');
+                    } else {
+                        console.log('no match');
+                    }
+
+                    var index = data.indexOf('id="main"');
+                    console.log(data.substring(index));
+                    localStorage.setItem(editor.bodyElement.id + "-file", data.substring(index));
+                    localStorage.setItem(editor.bodyElement.id + "-org", encodedOrginal);
+                    localStorage.setItem(editor.bodyElement.id, content);
+                }
+            });
+        }
+    }
+
+    function defaultPage() {
+        includeScript("//tinymce.cachefly.net/4.2/tinymce.min.js");
+        ensureLoaded('tinymce', window, function () {
+            tinymce.init({
+                selector: ".sw-editable",
+                inline: true,
+                menubar: false,
+                browser_spellcheck: true,
+                plugins: "save",
+                toolbar: "save | styleselect | bold italic | bullist numlist outdent indent | link image | undo redo",
+                save_onsavecallback: storeDefaultPage
+            });
+        });
+    }
 
     function loadAdminState(token) {
         includeScript('/admin/js/jStorage.js');
@@ -145,6 +202,7 @@
                                     parkingPage(storage);
                                     break;
                                 default:
+                                    defaultPage();
                                     break;
                             }
                             //storage.get('parking-test.html', function (file, callStatus) {
