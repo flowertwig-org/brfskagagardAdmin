@@ -214,7 +214,7 @@
         }
     }
 
-    function newsPage() {
+    function newsPage(storage) {
         includeScript("//tinymce.cachefly.net/4.2/tinymce.min.js");
         ensureLoaded('tinymce', window, function () {
             tinymce.init({
@@ -307,7 +307,7 @@
         });
     }
 
-    function defaultPage() {
+    function defaultPage(storage) {
         includeScript("//tinymce.cachefly.net/4.2/tinymce.min.js");
         ensureLoaded('tinymce', window, function () {
             tinymce.init({
@@ -315,9 +315,6 @@
                 inline: true,
                 menubar: false,
                 browser_spellcheck: true,
-                //style_formats: [
-                //    { title: 'Section', block: 'div', classes: 'news-item' }
-                //],
                 plugins: "save",
                 toolbar: "save | news-item-above news-item-below styleselect | bold italic | bullist numlist outdent indent | link image | undo redo",
                 save_onsavecallback: storeDefaultPage,
@@ -371,6 +368,40 @@
                 }
             });
         });
+
+        var moods = document.getElementsByClassName('mood');
+        if (moods.length == 1) {
+            var changeMood = document.createElement('span');
+            changeMood.innerHTML = '<a href="#">Change image</a>';
+
+            changeMood.style.position = 'absolute';
+            changeMood.style.zIndex = 10;
+            changeMood.style.margin = '20px';
+            changeMood.style.padding = '10px';
+            changeMood.style.backgroundColor = '#fff';
+            changeMood.style.border = 'solid 1px lightgrey';
+
+            moods[0].appendChild(changeMood);
+
+            changeMood.addEventListener('click', function (event) {
+                event.preventDefault();
+                this.innerHTML = "Loading images ...";
+                var container = this;
+
+                storage.list('/img/mood/', function (info, status) {
+                    console.log('arg', arguments);
+                    if (status.isOK) {
+                        var list = arguments[0];
+                        var elements = [];
+                        for (var i = 0; i < list.length; i++) {
+                            list[i]
+                            elements.push('<img src="' + list[i].path + '" width="200" />');
+                        }
+                        container.innerHTML = elements.join('');
+                    }
+                });
+            });
+        }
     }
 
     function loadAdminState(token) {
