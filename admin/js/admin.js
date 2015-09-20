@@ -403,23 +403,6 @@
                                     defaultPage(storage);
                                     break;
                             }
-                            //storage.get('parking-test.html', function (file, callStatus) {
-                            //    storage.get('parking.html', function (file, callStatus) {
-                            //        if (callStatus.isOK) {
-                            //            //alert('file loaded: \r\n' + file.data);
-                            //            var data = file.data;
-                            //            var regexp = /([^a-z0-9!{}<>/\;&#\:\ \=\\r\\n\\t\"\'\%\*\-\.\(\)])/gi;
-                            //            data = data ? data.replace(regexp, '') : '';
-                            //            storage.set('parking-test.html', data, function (fileMeta, callStatus) {
-                            //                if (callStatus.isOK) {
-                            //                    alert('done');
-                            //                } else {
-                            //                    alert('fail');
-                            //                }
-                            //            });
-                            //        }
-                            //    });
-                            //});
                         } else {
                             alert('Ogiltigt personligt åtkomsttoken.');
                             writeCookie(cookieName, '');
