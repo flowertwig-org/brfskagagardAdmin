@@ -141,7 +141,7 @@
                     var data = file.data;
                     data = data ? data.replace(regexp, '') : '';
 
-                    var index = data.indexOf('id="main"');
+                    var index = data.indexOf('id="' + container.id + '"');
                     index = data.indexOf('>', index);
                     index++;
 
