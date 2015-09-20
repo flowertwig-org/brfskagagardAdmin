@@ -233,6 +233,9 @@
                 inline: true,
                 menubar: false,
                 browser_spellcheck: true,
+                style_formats: [
+                    { title: 'Section', block: 'div', classes: 'news-item' }
+                ],
                 plugins: "save",
                 toolbar: "save | styleselect | bold italic | bullist numlist outdent indent | link image | undo redo",
                 save_onsavecallback: storeDefaultPage
