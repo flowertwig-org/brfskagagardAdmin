@@ -123,6 +123,11 @@
 
                             newData = newData.replace(mood.getAttribute('data-mood-orginal'), image);
 
+                            if (newData.indexOf('<meta name="generator" content="StaticWeb" />') == -1) {
+                                newData = newData.replace('</head>', '<meta name="generator" content="StaticWeb" /></head>');
+                            }
+
+
                             storage.set(resourceName, newData, function (fileMeta2, callStatus2) {
                                 if (callStatus2.isOK) {
                                     alert('saved');
@@ -143,7 +148,7 @@
                             orgImage = orgImage.substring(index);
                             orgImage = orgImage.substring(0, orgImage.length - 1);
                             mood.setAttribute('data-mood-orginal', '.' + orgImage);
-                        }
+                       }
 
                         var image = event.target.src;
                         index = image.indexOf('/img/mood');
@@ -250,6 +255,9 @@
                 data = data.replace('<img src="./img/parking-filler.png" id="' + parking.id + '" class="parking occupied" />', newHtml);
 
                 data = data ? data.replace(regexp, '') : '';
+                if (data.indexOf('<meta name="generator" content="StaticWeb" />') == -1) {
+                    data = data.replace('</head>', '<meta name="generator" content="StaticWeb" /></head>');
+                }
 
                 self.storage.set('parking.html', data, function (fileMeta, callStatus) {
                     if (callStatus.isOK) {
@@ -349,6 +357,10 @@
 
                         // We have not reproduced same start content, now, replace it :)
                         var newData = data.replace(tmp, content);
+                        if (newData.indexOf('<meta name="generator" content="StaticWeb" />') == -1) {
+                            newData = newData.replace('</head>', '<meta name="generator" content="StaticWeb" /></head>');
+                        }
+
                         self.storage.set(resourceName, newData, function (fileMeta, callStatus) {
                             if (callStatus.isOK) {
                                 alert('saved');
