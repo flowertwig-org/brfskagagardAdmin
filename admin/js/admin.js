@@ -130,21 +130,10 @@
             var regexp = /([^a-z0-9!{}<>/\;&#\:\ \=\\r\\n\\t\"\'\%\*\-\.\,\(\)\@])/gi;
             var resourceName = location.pathname.substring(1);
 
-            //console.log('editor', editor);
-            //console.log('container', editor.bodyElement);
             var container = editor.bodyElement;
             var content = container.innerHTML;
             content = encodetoHtml(content);
             content = content.replace(regexp, '');
-            //console.log('Current HTML', content);
-            //var orginalContent = editor.startContent;
-            //orginalContent = encodetoHtml(orginalContent);
-            //orginalContent = orginalContent.replace(regexp, '');
-            //orginalContent = orginalContent.replace(/&#8211; /gi, '');
-            //orginalContent = orginalContent.replace(/[ ]{2}/gi, ' ');
-            //console.log('Orginal HTML', orginalContent);
-            //console.log('storage', self.storage);
-            //console.log('resourceName', resourceName);
 
             self.storage.get(resourceName, function (file, callStatus) {
                 if (callStatus.isOK) {
@@ -225,6 +214,99 @@
         }
     }
 
+    function newsPage() {
+        includeScript("//tinymce.cachefly.net/4.2/tinymce.min.js");
+        ensureLoaded('tinymce', window, function () {
+            tinymce.init({
+                selector: ".sw-editable",
+                inline: true,
+                menubar: false,
+                browser_spellcheck: true,
+                plugins: "save",
+                toolbar: "save | news-item-above news-item-below bold italic | bullist numlist outdent indent | link image",
+                save_onsavecallback: storeDefaultPage,
+                setup: function (editor) {
+                    // Add a custom button
+                    editor.addButton('news-item-above', {
+                        title: 'Add section above this section',
+                        image: './admin/img/newsItemAbove.png',
+                        onclick: function () {
+                            // Add you own code to execute something on click
+                            editor.focus();
+                            var node = editor.selection.getNode();
+                            while (node.tagName.toLowerCase() != 'div' && node.className != 'news-item') {
+                                node = node.parentNode;
+                            }
+
+                            var date = new Date();
+                            var year = date.getFullYear();
+                            var month = date.getMonth() + 1;
+                            var day = date.getDate();
+
+                            if (month < 10) {
+                                month = "0" + month;
+                            }
+                            if (day < 10) {
+                                day = "0" + day;
+                            }
+
+                            var strDate = year + "-" + month + "-" + day;
+
+                            var newsItem = document.createElement("div");
+                            newsItem.id = strDate;
+                            newsItem.className = "news-item";
+                            newsItem.innerHTML = "<h2>Default title</h2><div class=\"news-date\">" + strDate + "</div><p>Default paragraf</p>";
+                            node.parentNode.insertBefore(newsItem, node);
+                        }
+                    });
+                    // Add a custom button
+                    editor.addButton('news-item-below', {
+                        title: 'Add section below this section',
+                        image: './admin/img/newsItemBelow.png',
+                        onclick: function () {
+                            // Add you own code to execute something on click
+                            editor.focus();
+                            var node = editor.selection.getNode();
+                            while (node.tagName.toLowerCase() != 'div' && node.className != 'news-item') {
+                                node = node.parentNode;
+                            }
+
+                            var date = new Date();
+                            var year = date.getFullYear();
+                            var month = date.getMonth() + 1;
+                            var day = date.getDate();
+
+                            if (month < 10) {
+                                month = "0" + month;
+                            }
+                            if (day < 10) {
+                                day = "0" + day;
+                            }
+
+                            var strDate = year + "-" + month + "-" + day;
+
+                            var newsItem = document.createElement("div");
+                            newsItem.id = strDate;
+                            newsItem.className = "news-item";
+                            newsItem.innerHTML = "<h2>Default title</h2><div class=\"news-date\">" + strDate + "</div><p>Default paragraf</p>";
+
+                            var parentNode = node.parentNode;
+                            var tmpNode = node.nextElementSibling;
+                            if (tmpNode)
+                            {
+                                node = tmpNode;
+                            } else {
+                                node = null;
+                            }
+
+                            parentNode.insertBefore(newsItem, node);
+                        }
+                    });
+                }
+            });
+        });
+    }
+
     function defaultPage() {
         includeScript("//tinymce.cachefly.net/4.2/tinymce.min.js");
         ensureLoaded('tinymce', window, function () {
@@ -233,12 +315,60 @@
                 inline: true,
                 menubar: false,
                 browser_spellcheck: true,
-                style_formats: [
-                    { title: 'Section', block: 'div', classes: 'news-item' }
-                ],
+                //style_formats: [
+                //    { title: 'Section', block: 'div', classes: 'news-item' }
+                //],
                 plugins: "save",
-                toolbar: "save | styleselect | bold italic | bullist numlist outdent indent | link image | undo redo",
-                save_onsavecallback: storeDefaultPage
+                toolbar: "save | news-item-above news-item-below styleselect | bold italic | bullist numlist outdent indent | link image | undo redo",
+                save_onsavecallback: storeDefaultPage,
+                setup: function (editor) {
+                    // Add a custom button
+                    editor.addButton('news-item-above', {
+                        title: 'Add section above this section',
+                        image: './admin/img/newsItemAbove.png',
+                        onclick: function () {
+                            // Add you own code to execute something on click
+                            editor.focus();
+                            var node = editor.selection.getNode();
+                            while (node.tagName.toLowerCase() != 'div' && node.className != 'news-item') {
+                                node = node.parentNode;
+                            }
+
+                            var newsItem = document.createElement("div");
+                            newsItem.className = "news-item";
+                            newsItem.innerHTML = "<h2>Default title</h2><p>Default paragraf</p>";
+                            node.parentNode.insertBefore(newsItem, node);
+                        }
+                    });
+                    // Add a custom button
+                    editor.addButton('news-item-below', {
+                        title: 'Add section below this section',
+                        image: './admin/img/newsItemBelow.png',
+                        onclick: function () {
+                            // Add you own code to execute something on click
+                            editor.focus();
+                            var node = editor.selection.getNode();
+                            while (node.tagName.toLowerCase() != 'div' && node.className != 'news-item') {
+                                node = node.parentNode;
+                            }
+
+                            var newsItem = document.createElement("div");
+                            newsItem.className = "news-item";
+                            newsItem.innerHTML = "<h2>Default title</h2><p>Default paragraf</p>";
+
+                            var parentNode = node.parentNode;
+                            var tmpNode = node.nextElementSibling;
+                            if (tmpNode) {
+                                node = tmpNode;
+                            } else {
+                                node = null;
+                            }
+
+                            parentNode.insertBefore(newsItem, node);
+                        }
+                    });
+
+                }
             });
         });
     }
@@ -266,8 +396,11 @@
                                 case '/parking.html':
                                     parkingPage(storage);
                                     break;
+                                case '/news.html':
+                                    newsPage(storage);
+                                    break;
                                 default:
-                                    defaultPage();
+                                    defaultPage(storage);
                                     break;
                             }
                             //storage.get('parking-test.html', function (file, callStatus) {
