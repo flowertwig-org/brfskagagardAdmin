@@ -105,6 +105,11 @@
             changeMood.addEventListener('click', function (event) {
                 event.preventDefault();
 
+                changeMood.style.backgroundColor = '#fff';
+                changeMood.style.border = 'solid 1px lightgrey';
+                changeMood.style.color = '#000';
+
+
                 if (event.target.innerHTML.indexOf('Change image') >= 0) {
                     this.innerHTML = "Loading images ...";
                     var container = this;
@@ -168,9 +173,20 @@
                         image = image.substring(index);
                         orgImage = image.substring(0, image.length - 1);
                         mood.style.backgroundImage = 'url(.' + image + ')';
-                        changeMood.innerHTML = '<a href="#">Change image</a> | <a href="#">Save</a>';
+
+                        changeMood.style.backgroundColor = '#2F5575';
+                        changeMood.style.color = '#fff';
+                        changeMood.style.border = '0';
+                        changeMood.style.borderRadius = '6px';
+
+                        changeMood.innerHTML = '<a href="#" style="text-decoration:none;color:#fff">Change image</a> | <a href="#" style="text-decoration:none;color:#fff">Save</a>';
                     } else {
-                        changeMood.innerHTML = '<a href="#">Change image</a>';
+                        changeMood.style.backgroundColor = '#2F5575';
+                        changeMood.style.color = '#fff';
+                        changeMood.style.border = '0';
+                        changeMood.style.borderRadius = '6px';
+
+                        changeMood.innerHTML = '<a href="#" style="text-decoration:none;color:#fff">Change image</a>';
                     }
                 }
             });
@@ -512,6 +528,7 @@
             event.preventDefault();
             if (event.target.tagName.toLowerCase() != 'img') {
                 dragdown.style.backgroundColor = '#fff'; // ff2200
+                dragdown.style.color = '#000'; // ff2200
                 dragdown.style.cursor = 'auto';
                 this.innerHTML = "<span>loading page templates...</span>";
                 dragdown.style.width = 'auto';
@@ -530,7 +547,8 @@
                             var isPreview = list[i].path.indexOf('.jpg') > 0 || list[i].path.indexOf('.jpeg') > 0 || list[i].path.indexOf('.png') > 0 || list[i].path.indexOf('.gif') > 0;
                             if (isPreview) {
                                 var name = list[i].name.replace('.jpg', '').replace('.jpeg', '').replace('.png', '').replace('.gif', '');
-                                elements.push('<div style="margin:5px;padding:1px;width:250px;display:inline-block;background-color:lightgrey;vertical-align:top"><b style="display:block;padding:4px">' + name + '</b><img src="' + list[i].path + '" width="100%" style="cursor:pointer" /></div>');
+                                elements.push('<div style="margin:5px;padding:1px;width:250px;display:inline-block;background-color:#2F5575;color:#fff;vertical-align:top;border-radius:6px;"><b style="display:block;padding:4px">' + name + '</b><img src="' + list[i].path + '" width="100%" style="cursor:pointer" /></div>');
+                                
                             }
                         }
                         //elements.push('</ul>');
