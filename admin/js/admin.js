@@ -88,14 +88,17 @@
         if (moods.length == 1) {
             var mood = moods[0];
             var changeMood = document.createElement('span');
-            changeMood.innerHTML = '<a href="#">Change image</a>';
+            changeMood.innerHTML = '<a href="#" style="color:#fff;text-decoration:none">Change image</a>';
 
             changeMood.style.position = 'absolute';
             changeMood.style.zIndex = 10;
             changeMood.style.margin = '20px';
             changeMood.style.padding = '10px';
-            changeMood.style.backgroundColor = '#fff';
-            changeMood.style.border = 'solid 1px lightgrey';
+            //changeMood.style.backgroundColor = '#fff';
+            //changeMood.style.border = 'solid 1px lightgrey';
+            changeMood.style.backgroundColor = '#2F5575';
+            changeMood.style.color = '#fff';
+            changeMood.style.borderRadius = '6px';
 
             mood.appendChild(changeMood);
 
@@ -497,10 +500,11 @@
         dragdown.style.border = 'solid 1px lightgrey';
         dragdown.style.borderTop = '0px';
         dragdown.style.width = '1em';
-        dragdown.style.textAlign = 'center';
         dragdown.style.padding = '5px';
         dragdown.style.fontWeight = 'bold';
-        dragdown.style.backgroundColor = '#ff2200';
+        dragdown.style.backgroundColor = '#2F5575';
+        dragdown.style.color = '#fff';
+        dragdown.style.borderRadius = '0 0 6px 0';
         nav.appendChild(dragdown);
         document.getElementsByTagName('body')[0].appendChild(nav);
 
@@ -539,10 +543,11 @@
                 dragdown.style.border = 'solid 1px lightgrey';
                 dragdown.style.borderTop = '0px';
                 dragdown.style.width = '1em';
-                dragdown.style.textAlign = 'center';
                 dragdown.style.padding = '5px';
                 dragdown.style.fontWeight = 'bold';
-                dragdown.style.backgroundColor = '#ff2200';
+                dragdown.style.backgroundColor = '#2F5575';
+                dragdown.style.color = '#fff';
+                dragdown.style.borderRadius = '0 0 6px 0';
 
             }
 
