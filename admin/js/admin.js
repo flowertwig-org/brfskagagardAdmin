@@ -514,22 +514,34 @@
                 var container = this;
                 storage.list('/admin/templates/page/', function (info, status) {
                     if (status.isOK) {
+                        nav.style.position = 'absolute';
+                        nav.style.top = '0px';
+
                         var list = arguments[0];
                         var elements = [];
-                        elements.push('<b>Create page from:</b>');
-                        elements.push('<ul>');
+                        elements.push('<b style="display:block;padding:5px;padding-bottom:10px">Create page from:</b>');
+                        //elements.push('<ul>');
                         for (var i = 0; i < list.length; i++) {
                             var isPreview = list[i].path.indexOf('.jpg') > 0 || list[i].path.indexOf('.jpeg') > 0 || list[i].path.indexOf('.png') > 0 || list[i].path.indexOf('.gif') > 0;
-                            var isHtmlPage = htmlIndex > 0 || htmIndex > 0;
-                            if (isHtmlPage) {
-                                elements.push('<li><img src="' + list[i].path + '" width="300" /></li>');
+                            if (isPreview) {
+                                var name = list[i].name.replace('.jpg', '').replace('.jpeg', '').replace('.png', '').replace('.gif', '');
+                                elements.push('<div style="margin:5px;padding:1px;width:250px;display:inline-block;background-color:lightgrey;vertical-align:top"><b style="display:block;padding:4px">' + name + '</b><img src="' + list[i].path + '" width="100%" /></div>');
                             }
                         }
-                        elements.push('</ul>');
+                        //elements.push('</ul>');
                         container.innerHTML = elements.join('');
                     }
                 });
             } else {
+                dragdown.innerText = '+';
+                dragdown.style.cursor = 'pointer';
+                dragdown.style.border = 'solid 1px lightgrey';
+                dragdown.style.borderTop = '0px';
+                dragdown.style.width = '1em';
+                dragdown.style.textAlign = 'center';
+                dragdown.style.padding = '5px';
+                dragdown.style.fontWeight = 'bold';
+                dragdown.style.backgroundColor = '#ff2200';
 
             }
 
