@@ -472,9 +472,53 @@
         changeMood(storage);
     }
 
+    function changeNavigation(storage) {
+        var nav = document.createElement('div');
+
+        nav.style.position = 'fixed';
+        nav.style.top = '0px';
+        nav.style.margin = '0 auto';
+        nav.style.width = '100%';
+
+        var dragdown = document.createElement('div');
+        dragdown.innerText = '+';
+        dragdown.style.zIndex = 10000;
+        dragdown.style.cursor = 'pointer';
+        dragdown.style.border = 'solid 1px lightgrey';
+        dragdown.style.borderTop = '0px';
+        dragdown.style.width = '1em';
+        dragdown.style.textAlign = 'center';
+        dragdown.style.padding = '5px';
+        dragdown.style.backgroundColor = '#fff';
+        nav.appendChild(dragdown);
+        document.getElementsByTagName('body')[0].appendChild(nav);
+
+        dragdown.addEventListener('click', function (event) {
+            event.preventDefault();
+
+            this.innerHTML = "<span>loading page templates...</span>";
+            dragdown.style.width = 'auto';
+            var container = this;
+            storage.list('/admin/templates/page/', function (info, status) {
+                console.log('arg', arguments);
+                if (status.isOK) {
+                    var list = arguments[0];
+                    var elements = [];
+                    for (var i = 0; i < list.length; i++) {
+                        elements.push('<span>' + list[i].name + '</span><br />');
+                    }
+                    container.innerHTML = elements.join('');
+                }
+            });
+
+        });
+    }
+
+
     function defaultPage(storage) {
         changeTextContent(storage);
         changeMood(storage);
+        changeNavigation(storage);
     }
 
     function loadAdminState(token) {
