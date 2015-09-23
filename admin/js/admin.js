@@ -508,6 +508,7 @@
             event.preventDefault();
             if (event.target.tagName.toLowerCase() != 'img') {
                 dragdown.style.backgroundColor = '#fff'; // ff2200
+                dragdown.style.cursor = 'auto';
                 this.innerHTML = "<span>loading page templates...</span>";
                 dragdown.style.width = 'auto';
                 dragdown.style.textAlign = 'left';
@@ -525,7 +526,7 @@
                             var isPreview = list[i].path.indexOf('.jpg') > 0 || list[i].path.indexOf('.jpeg') > 0 || list[i].path.indexOf('.png') > 0 || list[i].path.indexOf('.gif') > 0;
                             if (isPreview) {
                                 var name = list[i].name.replace('.jpg', '').replace('.jpeg', '').replace('.png', '').replace('.gif', '');
-                                elements.push('<div style="margin:5px;padding:1px;width:250px;display:inline-block;background-color:lightgrey;vertical-align:top"><b style="display:block;padding:4px">' + name + '</b><img src="' + list[i].path + '" width="100%" /></div>');
+                                elements.push('<div style="margin:5px;padding:1px;width:250px;display:inline-block;background-color:lightgrey;vertical-align:top"><b style="display:block;padding:4px">' + name + '</b><img src="' + list[i].path + '" width="100%" style="cursor:pointer" /></div>');
                             }
                         }
                         //elements.push('</ul>');
