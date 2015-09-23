@@ -3,6 +3,16 @@
     var cookieName = 'token';
     var loginPages = { '/admin/': true, '/admin/index.html': true };
 
+    //var adminPath = '/admin/';
+    //var scripts = document.getElementsByTagName('script');
+    //for (var i = 0; i < scripts.length; i++) {
+    //    var url = scripts[i].src;
+    //    if (url && url.indexOf('js/checker.js') >= 0) {
+    //        adminPath = url.replace('js/checker.js', '');
+    //        break;
+    //    }
+    //}
+
     var storage = false;
     var self = this;
 
@@ -479,37 +489,49 @@
         nav.style.top = '0px';
         nav.style.margin = '0 auto';
         nav.style.width = '100%';
+        nav.style.zIndex = '100000';
 
         var dragdown = document.createElement('div');
         dragdown.innerText = '+';
-        dragdown.style.zIndex = 10000;
         dragdown.style.cursor = 'pointer';
         dragdown.style.border = 'solid 1px lightgrey';
         dragdown.style.borderTop = '0px';
         dragdown.style.width = '1em';
         dragdown.style.textAlign = 'center';
         dragdown.style.padding = '5px';
-        dragdown.style.backgroundColor = '#fff';
+        dragdown.style.fontWeight = 'bold';
+        dragdown.style.backgroundColor = '#ff2200';
         nav.appendChild(dragdown);
         document.getElementsByTagName('body')[0].appendChild(nav);
 
         dragdown.addEventListener('click', function (event) {
             event.preventDefault();
-
-            this.innerHTML = "<span>loading page templates...</span>";
-            dragdown.style.width = 'auto';
-            var container = this;
-            storage.list('/admin/templates/page/', function (info, status) {
-                console.log('arg', arguments);
-                if (status.isOK) {
-                    var list = arguments[0];
-                    var elements = [];
-                    for (var i = 0; i < list.length; i++) {
-                        elements.push('<span>' + list[i].name + '</span><br />');
+            if (event.target.tagName.toLowerCase() != 'img') {
+                dragdown.style.backgroundColor = '#fff'; // ff2200
+                this.innerHTML = "<span>loading page templates...</span>";
+                dragdown.style.width = 'auto';
+                dragdown.style.textAlign = 'left';
+                var container = this;
+                storage.list('/admin/templates/page/', function (info, status) {
+                    if (status.isOK) {
+                        var list = arguments[0];
+                        var elements = [];
+                        elements.push('<b>Create page from:</b>');
+                        elements.push('<ul>');
+                        for (var i = 0; i < list.length; i++) {
+                            var isPreview = list[i].path.indexOf('.jpg') > 0 || list[i].path.indexOf('.jpeg') > 0 || list[i].path.indexOf('.png') > 0 || list[i].path.indexOf('.gif') > 0;
+                            var isHtmlPage = htmlIndex > 0 || htmIndex > 0;
+                            if (isHtmlPage) {
+                                elements.push('<li><img src="' + list[i].path + '" width="300" /></li>');
+                            }
+                        }
+                        elements.push('</ul>');
+                        container.innerHTML = elements.join('');
                     }
-                    container.innerHTML = elements.join('');
-                }
-            });
+                });
+            } else {
+
+            }
 
         });
     }

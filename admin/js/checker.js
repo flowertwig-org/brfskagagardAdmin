@@ -23,7 +23,15 @@
     var token = readCookie(cookieName);
     if (token) 
     {
-        // Load admin script(s)
-        includeScript('/admin/js/admin.js');
+        var scripts = document.getElementsByTagName('script');
+        for (var i = 0; i < scripts.length; i++) {
+            var url = scripts[i].src;
+            if (url && url.indexOf('js/checker.js') >= 0) {
+                url = url.replace('checker.js', '');
+                // Load admin script(s)
+                includeScript( url + 'admin.js');
+                break;
+            }
+        }
     }
 })();
