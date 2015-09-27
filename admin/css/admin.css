@@ -1,0 +1,41 @@
+.sw-dragdown {
+    cursor: pointer;
+    border: solid 1px lightgrey;
+    border-top: 0px;
+    width: 1em;
+    padding: 5px;
+    font-weight: bold;
+    background-color: #2F5575;
+    color: #fff;
+    border-radius: 0 0 6px 0;
+    text-align: center;
+}
+.sw-dragdown-opening {
+    display: none;
+}
+
+.sw-dragdown-open {
+    border-radius: 6px;
+    margin-top: 5px;
+    margin-right: 10px;
+    float: right;
+}
+
+.sw-drowdown-btn-close {
+    cursor: pointer;
+    border-right-style: solid;
+    border-bottom-style: solid;
+    border-left-style: solid;
+    border-width: 0px 1px 1px;
+    border-right-color: rgb(211, 211, 211);
+    border-bottom-color: rgb(211, 211, 211);
+    border-left-color: rgb(211, 211, 211);
+    width: 1em;
+    padding: 5px;
+    font-weight: bold;
+    color: rgb(255, 255, 255);
+    border-radius: 6px;
+    background-color: rgb(47, 85, 117);
+    float: right;
+    text-align: center;
+}
