@@ -10,9 +10,24 @@
         return this.init();
     }
     Text.prototype = {
+        includeScript: function (addr) {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = addr;
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        },
+        ensureLoaded: function(name, container, callback) {
+            var self = this;
+            setTimeout(function () {
+                if (name in container) {
+                    callback();
+                } else {
+                    self.ensureLoaded(name, container, callback);
+                }
+            }, 100);
+        },
         init: function () {
-        includeScript("//tinymce.cachefly.net/4.2/tinymce.min.js");
-        ensureLoaded('tinymce', window, function () {
+            this.includeScript("//tinymce.cachefly.net/4.2/tinymce.min.js");
+            ensureLoaded('tinymce', window, function () {
             tinymce.init({
                 selector: ".sw-editable",
                 inline: true,
