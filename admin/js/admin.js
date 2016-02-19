@@ -238,7 +238,7 @@
     }
     
     function changeTextContent() {
-        includeScript("/admin/swtext.js");
+        includeScript("/admin/js/swtext.js");
         ensureLoaded('swText', window, function () {
             swText();
         });
