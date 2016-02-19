@@ -27,7 +27,7 @@
         },
         init: function () {
             this.includeScript("//tinymce.cachefly.net/4.2/tinymce.min.js");
-            ensureLoaded('tinymce', window, function () {
+            this.ensureLoaded('tinymce', window, function () {
             tinymce.init({
                 selector: ".sw-editable",
                 inline: true,
