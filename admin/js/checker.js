@@ -30,6 +30,7 @@
                 url = url.replace('checker.js', '');
                 // Load admin script(s)
                 includeScript( url + 'admin.js');
+                includeScript( url + 'swadmin.js');
                 break;
             }
         }
