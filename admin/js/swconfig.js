@@ -1,5 +1,8 @@
+/* global StaticWeb */
 (function (sw) {
-    sw.config.storageType = 'github';
-    sw.config.storageRepo = 'flowertwig-org/brfskagagardAdmin';
-    sw.config.cookieName = 'token';
+    sw.config.storage = {
+        'type': 'github',
+        'repo': 'flowertwig-org/brfskagagardAdmin'
+    }
+    sw.config.cookieName = 'staticweb-token';
 })(StaticWeb);

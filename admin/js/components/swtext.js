@@ -1,41 +1,31 @@
-(function (w) {
+/* global tinymce */
+(function (staticWeb) {
     "use strict";
-    var Text = function (storage) {
+    var Text = function () {
         if (!(this instanceof Text)) {
             return new Text();
         }
-
-        this.storage = storage;
+        
+        //this.storage = storage;
 
         return this.init();
     }
     Text.prototype = {
-        includeScript: function (addr) {
-            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-            ga.src = addr;
-            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-        },
-        ensureLoaded: function (name, container, callback) {
-            var self = this;
-            setTimeout(function () {
-                if (name in container) {
-                    callback();
-                } else {
-                    self.ensureLoaded(name, container, callback);
-                }
-            }, 100);
+        save: function() {
+            alert('save button pressed!');
         },
         init: function () {
-            this.includeScript("//tinymce.cachefly.net/4.2/tinymce.min.js");
-            this.ensureLoaded('tinymce', window, function () {
+            var self = this;
+            staticWeb.includeScript("//tinymce.cachefly.net/4.2/tinymce.min.js");
+            staticWeb.ensureLoaded('tinymce', window, function () {
                 tinymce.init({
-                    selector: ".sw-editable",
+                    selector: ".staticweb-component[data-staticweb-component=swtext]",
                     inline: true,
                     menubar: false,
                     browser_spellcheck: true,
                     plugins: "save",
                     toolbar: "save | news-item-above news-item-below styleselect | bold italic | bullist numlist outdent indent | link image | undo redo",
-                    save_onsavecallback: storeDefaultPage,
+                    save_onsavecallback: self.save,
                     setup: function (editor) {
                         // Add a custom button
                         editor.addButton('news-item-above', {
@@ -89,6 +79,5 @@
 
         }
     }
-    w.swText = Text;
-})(window);
-
+    staticWeb.components.swText = new Text();
+})(window.StaticWeb);

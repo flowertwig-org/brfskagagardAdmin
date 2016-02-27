@@ -1,6 +1,5 @@
 (function () {
-    //var cookieName = 'staticweb-token';
-    var cookieName = 'token';
+    var cookieName = 'staticweb-token';
 
     function readCookie(name) {
         var nameEQ = name + "=";
@@ -29,7 +28,6 @@
             if (url && url.indexOf('js/checker.js') >= 0) {
                 url = url.replace('checker.js', '');
                 // Load admin script(s)
-                includeScript( url + 'admin.js');
                 includeScript( url + 'swadmin.js');
                 break;
             }

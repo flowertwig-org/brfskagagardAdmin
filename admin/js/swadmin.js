@@ -1,3 +1,4 @@
+/* global jStorage */
 (function (w) {
     "use strict";
     var StaticWeb = function () {
@@ -5,19 +6,16 @@
             return new StaticWeb();
         }
 
-        this.config = {
-            // 'storageType': false,
-            // 'storageRepo': false,
-            // 'storageToken': false
-        };
-        // this.cookieName = 'staticweb-token';
-        this.cookieName = 'token';
+        this.config = {};
+        this.cookieName = 'staticweb-token';
+        // all loaded components should store them self here.
+        this.components = {};
         
         // set folder location from staticweb.js
         var path = this.getAdminPath()
         this.loginPages = {};
         this.loginPages[path] = true;
-        this.loginPages[path + '/index.html'] = true;
+        this.loginPages[path + 'index.html'] = true;
 
         this.storage = false;
 
@@ -25,7 +23,23 @@
     }
     StaticWeb.prototype = {
         init: function () {
-
+            var self = this;
+            var token = this.getToken();
+            // Do we have a valid token?
+            if (token) {
+                this.loadAdminState(token);
+            } else {
+                var button = document.getElementById('staticweb-login-btn')
+                button.addEventListener('click', function () {
+                    var input = document.getElementById('staticweb-login-token');
+                    var token = self.sanitizeToken(input.value);
+                    if (token) {
+                        self.loadAdminState(token);
+                    } else {
+                        alert('Ogiltigt personligt åtkomsttoken.');
+                    }
+                });
+            }
         },
         getAdminPath: function () {
             var adminPath = '/staticweb/';
@@ -38,6 +52,155 @@
                 }
             }
             return adminPath;
+        },
+        loadAdminState: function (token) {
+            var self = this;
+            var adminPath = this.getAdminPath();
+            this.loadComponents();
+
+            this.includeScript(adminPath + 'js/jStorage.js');
+            this.includeScript(adminPath + 'js/swconfig.js');
+            self.ensureLoaded('storage', self.config, function () {
+                self.ensureLoaded('jStorage', window, function () {
+                    self.includeScript(adminPath + 'js/jStorage.' + self.config.storage.type + '.js');
+                    self.ensureLoaded(self.config.storage.type, jStorage.providers, function () {
+                        self.storage = jStorage({
+                            'name': self.config.storage.type,
+                            'repo': self.config.storage.repo,
+                            'token': token,
+                            'callback': function (storage, callStatus) {
+                                if (callStatus.isOK) {
+                                    self.writeCookie(self.cookieName, token);
+
+                                    if (location.href in self.loginPages) {
+                                        self.showNavigation();
+                                        self.removeLogin();
+                                    }
+                                    
+                                    self.config.storage.isReady = true;
+                                } else {
+                                    alert('Ogiltigt personligt åtkomsttoken.');
+                                    self.writeCookie(self.cookieName, '');
+                                    location.reload();
+                                }
+                            }
+                        });
+                    });
+                });
+            });
+        },
+        saveResource: function (resourceName, data) {
+            // TODO: queue requests that are done until we have a valid storage
+            this.storage.set(resourceName, data, function (fileMeta, callStatus) {
+                if (callStatus.isOK) {
+                    alert('saved');
+                } else {
+                    alert('fail, error code: 1');
+                }
+            });
+        },
+        saveCurrentPage: function () {
+            var resourceName = location.pathname;
+            if (resourceName[resourceName.length - 1] === '/') {
+                resourceName = resourceName + "index.html";
+            }
+            this.savePage(resourceName);
+        },
+        savePage: function (resourceName) {
+            /* TODO: Add following properties */
+            
+            // new content to replace current with
+            var content = '';
+            // container div for this component
+            var container = false;
+            
+            // Disallowed chars regex
+            var regexp = '';
+
+            self.storage.get(resourceName, function (file, callStatus) {
+                if (callStatus.isOK) {
+                    //alert('file loaded: \r\n' + file.data);
+                    var data = file.data;
+                    data = data ? data.replace(regexp, '') : '';
+
+                    var index = data.indexOf('id="' + container.id + '"');
+                    index = data.indexOf('>', index);
+                    index++;
+
+
+                    var tagName = container.tagName.toLowerCase();
+                    var tmp = data.substring(index);
+
+                    var endIndex = 0;
+                    var startIndex = 0;
+                    var tagsInMemory = 0;
+
+                    var found = false;
+                    var insanityIndex = 0;
+                    while (!found && insanityIndex < 10000) {
+                        insanityIndex++;
+                        endIndex = tmp.indexOf('</' + tagName, endIndex);
+                        startIndex = tmp.indexOf('<' + tagName, startIndex);
+
+                        if (startIndex == -1) {
+                            // we have not found a start tag of same type so we have found our end tag.
+                            if (tagsInMemory == 0) {
+                                tmp = tmp.substring(0, endIndex);
+                                found = true;
+                            } else {
+                                tagsInMemory--;
+                                endIndex += tagName.length + 2;
+                                startIndex = endIndex;
+                            }
+                        } else if (endIndex < startIndex) {
+                            // start tag was found after our end tag so we have found our end tag.
+                            if (tagsInMemory == 0) {
+                                tmp = tmp.substring(0, endIndex);
+                                found = true;
+                            } else {
+                                tagsInMemory--;
+                                endIndex += tagName.length + 2;
+                                startIndex = endIndex;
+                            }
+                        } else {
+                            tagsInMemory++;
+                            startIndex += tagName.length + 1;
+                            endIndex = startIndex;
+                        }
+                    }
+
+                    tmp = tmp.substring(0, endIndex);
+                    console.log(tmp);
+
+                    //if (data.indexOf(orginalContent) >= 0) {
+                    if (data.indexOf(tmp) >= 0) {
+                        console.log('found orginal');
+
+                        // We have not reproduced same start content, now, replace it :)
+                        var newData = data.replace(tmp, content);
+                        if (newData.indexOf('<meta name="generator" content="StaticWeb" />') == -1) {
+                            newData = newData.replace('</head>', '<meta name="generator" content="StaticWeb" /></head>');
+                        }
+
+                        self.saveResource(resourceName, newData);
+                    } else {
+                        alert('fail, error code: 2');
+                        console.log('no match');
+                    }
+                }
+            })
+        },
+        loadComponents: function () {
+            var self = this;
+            var adminPath = self.getAdminPath();
+            var elements = document.getElementsByClassName('staticweb-component');
+            for (var index = 0; index < elements.length; index++) {
+                var element = elements[index];
+                var attr = element.attributes['data-staticweb-component'];
+                if (attr) {
+                    self.includeScript(adminPath + 'js/components/' + attr.value + '.js');
+                }
+            }
         },
         writeCookie: function (name, value, days) {
             var expires = "";
@@ -85,102 +248,27 @@
         getToken: function () {
             var token = this.readCookie(this.cookieName);
             return this.sanitizeToken(token);
+        },
+
+        showNavigation: function () {
+            var nav = document.getElementsByClassName('navigation')[0];
+            nav.style.display = "block";
+        },
+
+        removeLogin: function () {
+            var mood = document.getElementsByClassName('mood')[0];
+            mood.className = "mood";
+
+            var callToAction = document.getElementsByClassName('call-to-action')[0];
+            callToAction.remove();
         }
 
     }
     w.StaticWeb = StaticWeb();
 })(window);
 
-    
-// var cookieName = 'token';
-// var loginPages = { '/admin/': true, '/admin/index.html': true };
-
-
-// var storage = false;
-// var self = this;
-
-function showNavigation() {
-    var nav = document.getElementsByClassName('navigation')[0];
-    nav.style.display = "block";
-}
-
-function removeLogin() {
-    var mood = document.getElementsByClassName('mood')[0];
-    mood.className = "mood";
-
-    var callToAction = document.getElementsByClassName('call-to-action')[0];
-    callToAction.remove();
-}
-
-function changeTextContent() {
-    includeScript("/admin/js/swtext.js");
-    ensureLoaded('swText', window, function () {
-        swText();
-    });
-}
 
 
 
 
-
-
-
-
-function loadAdminState(token) {
-    includeScript('/admin/js/jStorage.js');
-
-    ensureLoaded('jStorage', window, function () {
-        includeScript('/admin/js/jStorage.github.js');
-        ensureLoaded('github', jStorage.providers, function () {
-            self.storage = jStorage({
-                'name': 'github',
-                'repo': 'flowertwig-org/brfskagagardAdmin',
-                'token': token,
-                'callback': function (storage, callStatus) {
-                    if (callStatus.isOK) {
-                        writeCookie(cookieName, token);
-
-                        if (location.pathname in loginPages) {
-                            showNavigation();
-                            removeLogin();
-                        }
-
-                        switch (location.pathname) {
-                            case '/parking.html':
-                                parkingPage(storage);
-                                break;
-                            case '/news.html':
-                                newsPage(storage);
-                                break;
-                            default:
-                                defaultPage(storage);
-                                break;
-                        }
-                    } else {
-                        alert('Ogiltigt personligt �tkomsttoken.');
-                        writeCookie(cookieName, '');
-                        location.reload();
-                    }
-                }
-            });
-        });
-    });
-}
-
-var token = getToken();
-// Do we have a valid token?
-if (token) {
-    loadAdminState(token);
-} else {
-    var button = document.getElementById('staticweb-login-btn')
-    button.addEventListener('click', function () {
-        var input = document.getElementById('staticweb-login-token');
-        var token = sanitizeToken(input.value);
-        if (token) {
-            loadAdminState(token);
-        } else {
-            alert('Ogiltigt personligt �tkomsttoken.');
-        }
-    });
-}
 
