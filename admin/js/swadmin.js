@@ -198,8 +198,8 @@
                         if (newData.indexOf('<meta name="generator" content="StaticWeb" />') == -1) {
                             newData = newData.replace('</head>', '<meta name="generator" content="StaticWeb" /></head>');
                         }
-
-                        self.saveResource(resourceName, newData);
+                        
+                        self.updateResource(resourceName, newData);
                     } else {
                         alert('fail, error code: 2');
                         console.log('no match');
