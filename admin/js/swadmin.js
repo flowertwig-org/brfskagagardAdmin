@@ -76,7 +76,7 @@
                                         self.showNavigation();
                                         self.removeLogin();
                                     }
-                                    
+
                                     self.config.storage.isReady = true;
                                 } else {
                                     alert('Ogiltigt personligt åtkomsttoken.');
@@ -89,7 +89,7 @@
                 });
             });
         },
-        saveResource: function (resourceName, data) {
+        addResource: function (resourceName, data) {
             // TODO: queue requests that are done until we have a valid storage
             this.storage.set(resourceName, data, function (fileMeta, callStatus) {
                 if (callStatus.isOK) {
@@ -99,23 +99,41 @@
                 }
             });
         },
-        saveCurrentPage: function () {
-            var resourceName = location.pathname;
+        updateResource: function (resourceName, data) {
+            // TODO: queue requests that are done until we have a valid storage
+            // NOTE: We can only update file if we have previously called getResource....
+            this.storage.set(resourceName, data, function (fileMeta, callStatus) {
+                if (callStatus.isOK) {
+                    alert('saved');
+                } else {
+                    alert('fail, error code: 1');
+                }
+            });
+        },
+        updateCurrentPage: function () {
+            var resourceName = location.pathname.substring(1);
+            if (resourceName.length == 0) {
+                resourceName = "index.html";
+            }
             if (resourceName[resourceName.length - 1] === '/') {
                 resourceName = resourceName + "index.html";
             }
-            this.savePage(resourceName);
+            this.updatePage(resourceName);
         },
-        savePage: function (resourceName) {
+        updatePage: function (containerId, containerTagName, resourceName, content) {
             /* TODO: Add following properties */
-            
+            var self = this;
+
+            content = this.encodeToHtml(content);
+            content = content.replace(regexp, '');
+
             // new content to replace current with
-            var content = '';
-            // container div for this component
-            var container = false;
-            
+            // var content = '';
+            // // container div for this component
+            // var containerId = false;
+            // var containerTagName = false;
             // Disallowed chars regex
-            var regexp = '';
+            var regexp = /([^a-z0-9!{}<>/\;&#\:\ \=\\r\\n\\t\"\'\%\*\-\.\,\(\)\@])/gi;
 
             self.storage.get(resourceName, function (file, callStatus) {
                 if (callStatus.isOK) {
@@ -123,12 +141,11 @@
                     var data = file.data;
                     data = data ? data.replace(regexp, '') : '';
 
-                    var index = data.indexOf('id="' + container.id + '"');
+                    var index = data.indexOf('id="' + containerId + '"');
                     index = data.indexOf('>', index);
                     index++;
 
-
-                    var tagName = container.tagName.toLowerCase();
+                    var tagName = containerTagName.toLowerCase();
                     var tmp = data.substring(index);
 
                     var endIndex = 0;
@@ -241,7 +258,7 @@
             token = token ? token.replace(regexp, '') : '';
             return token;
         },
-        encodetoHtml: function (data) {
+        encodeToHtml: function (data) {
             var toHtmlCode = function (char) { return '&#' + char.charCodeAt('0') + ';'; };
             return data.replace(/([^a-z0-9!{}<>/\;&#\:\ \=\\r\\n\\t\"\'\%\*\-\.\,\(\)\@])/gi, toHtmlCode);
         },
