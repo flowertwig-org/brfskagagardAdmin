@@ -21,13 +21,13 @@
                                 
                 staticWeb.updatePage(container.id, container.tagName, resourceName, content);
             }
-
         },
         init: function () {
             var self = this;
-            //staticWeb.includeScript("//tinymce.cachefly.net/4.2/tinymce.min.js");
+            
             staticWeb.includeScript("//tinymce.cachefly.net/4.3/tinymce.min.js");
             staticWeb.ensureLoaded('tinymce', window, function () {
+                // TODO: see if element in question have a 'data-staticweb-component-swtext-data' attribute and use that for the toolbar options
                 tinymce.init({
                     selector: ".staticweb-component[data-staticweb-component=swtext]",
                     inline: true,
@@ -38,7 +38,6 @@
                     save_onsavecallback: self.save
                 });
             });
-
         }
     }
     staticWeb.components.swText = new Text();
