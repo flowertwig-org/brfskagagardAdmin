@@ -121,23 +121,16 @@
             this.updatePage(resourceName);
         },
         updatePage: function (containerId, containerTagName, resourceName, content) {
-            /* TODO: Add following properties */
             var self = this;
 
             content = this.encodeToHtml(content);
             content = content.replace(regexp, '');
 
-            // new content to replace current with
-            // var content = '';
-            // // container div for this component
-            // var containerId = false;
-            // var containerTagName = false;
             // Disallowed chars regex
             var regexp = /([^a-z0-9!{}<>/\;&#\:\ \=\\r\\n\\t\"\'\%\*\-\.\,\(\)\@])/gi;
 
             self.storage.get(resourceName, function (file, callStatus) {
                 if (callStatus.isOK) {
-                    //alert('file loaded: \r\n' + file.data);
                     var data = file.data;
                     data = data ? data.replace(regexp, '') : '';
 
@@ -187,12 +180,8 @@
                     }
 
                     tmp = tmp.substring(0, endIndex);
-                    console.log(tmp);
 
-                    //if (data.indexOf(orginalContent) >= 0) {
                     if (data.indexOf(tmp) >= 0) {
-                        console.log('found orginal');
-
                         // We have not reproduced same start content, now, replace it :)
                         var newData = data.replace(tmp, content);
                         if (newData.indexOf('<meta name="generator" content="StaticWeb" />') == -1) {
@@ -201,8 +190,7 @@
                         
                         self.updateResource(resourceName, newData);
                     } else {
-                        alert('fail, error code: 2');
-                        console.log('no match');
+                        alert('Could not update page, no matching content');
                     }
                 }
             })
