@@ -8,20 +8,20 @@
         return this.init();
     }
     MoodImage.prototype = {
-        save: function (container) {
+        save: function (container, mood) {
             var resourceName = location.pathname.substring(1);
             if (!resourceName || resourceName[resourceName.length - 1] == '/') {
                 resourceName += 'index.html';
             }
 
-            var image = container.style.backgroundImage;
+            var image = mood.style.backgroundImage;
             var index = image.indexOf('/img/mood');
             image = '.' + image.substring(index);
             image = image.substring(0, image.length - 1);
-            container.removeAttribute('data-mood-orginal');
+            mood.removeAttribute('data-mood-orginal');
             
-            var content = container.outerHTML;
-            content = content.replace(container.style.backgroundImage, "url('" + image + "')");
+            var content = mood.outerHTML;
+            content = content.replace(mood.style.backgroundImage, "url('" + image + "')");
             
             staticWeb.updatePage(container.id, container.tagName, resourceName, content);
         },
@@ -104,7 +104,7 @@
                     event.preventDefault();
                     changeBtn.style.display = 'none';
                     saveBtn.style.display = 'none';
-                    self.listImages(imageArea);
+                    self.listImages(container, imageArea);
                 });
 
                 saveBtn.href = '#';
