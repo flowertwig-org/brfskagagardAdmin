@@ -104,7 +104,7 @@
                     event.preventDefault();
                     changeBtn.style.display = 'none';
                     saveBtn.style.display = 'none';
-                    self.listImages(container, imageArea);
+                    self.listImages(imageArea);
                 });
 
                 saveBtn.href = '#';
@@ -119,7 +119,7 @@
                 saveBtn.addEventListener('click', function (event) {
                     event.preventDefault();
                     mood.removeChild(panel);
-                    self.save(mood);
+                    self.save(container, mood);
                     mood.appendChild(panel);
                 });
                 
