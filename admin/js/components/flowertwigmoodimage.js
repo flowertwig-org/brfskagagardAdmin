@@ -78,7 +78,7 @@
                 var changeBtn = document.createElement('a');
                 var saveBtn = document.createElement('a');
                 
-                imageArea.style.display = 'inline-block';
+                imageArea.style.display = 'none';
                 imageArea.style.borderRadius = '6px';
                 imageArea.style.padding = '10px';
                 imageArea.style.backgroundColor = '#fff';
@@ -104,6 +104,7 @@
                     event.preventDefault();
                     changeBtn.style.display = 'none';
                     saveBtn.style.display = 'none';
+                    imageArea.style.display = 'inline-block';
                     self.listImages(imageArea);
                 });
 
