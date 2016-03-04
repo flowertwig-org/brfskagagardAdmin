@@ -8,8 +8,9 @@
 
         this.config = {};
         this.cookieName = 'staticweb-token';
-        // all loaded components should store them self here.
+        // all loaded components should store themself here.
         this.components = {};
+        this.elements = {};
         
         // set folder location from staticweb.js
         var path = this.getAdminPath()
@@ -198,12 +199,28 @@
         loadComponents: function () {
             var self = this;
             var adminPath = self.getAdminPath();
+
+            // Find elements that should be created as components
             var elements = document.getElementsByClassName('staticweb-component');
             for (var index = 0; index < elements.length; index++) {
                 var element = elements[index];
                 var attr = element.attributes['data-staticweb-component'];
                 if (attr) {
-                    self.includeScript(adminPath + 'js/components/' + attr.value + '.js');
+                    // If this is the first component of this type, create array
+                    if (!self.elements[attr.value]){
+                        self.elements[attr.value] = [];
+                    }
+                    // add element to known elements for type
+                    self.elements[attr.value].push(element);
+                }
+            }
+            
+            // Load all components we have found
+            // We are waiting until we have gone through all elements because there can be multiple elements of same component type
+            // and we want to be sure self.elements contains all of our types when component is loaded )
+            for (var key in self.elements) {
+                if (self.elements.hasOwnProperty(key)) {
+                    self.includeScript(adminPath + 'js/components/' + key + '.js');
                 }
             }
         },
