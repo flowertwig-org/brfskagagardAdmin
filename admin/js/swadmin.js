@@ -19,13 +19,11 @@
 
         this.storage = false;
             
-        this.inAdminPath = location.toString().indexOf(StaticWeb.getAdminPath()) == 0;
-
         var token = this.getToken();
         // Do we have a valid token?
         if (token) {
             this.loadAdminState(token);
-        } else if (this.inAdminPath) {
+        } else if (this.inAdminPath()) {
             var button = document.getElementById('staticweb-login-btn')
             button.addEventListener('click', function () {
                 var input = document.getElementById('staticweb-login-token');
@@ -58,7 +56,7 @@
                             if (callStatus.isOK) {
                                 self.writeCookie(self.cookieName, token);
 
-                                if (self.inAdminPath) {
+                                if (self.inAdminPath()) {
                                     self.showNavigation();
                                     self.removeLogin();
                                 }

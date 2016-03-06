@@ -9,7 +9,7 @@
     }
     StaticWebDefinition.prototype = {
         init: function () {
-             
+
         },
         readCookie: function (name) {
             var nameEQ = name + "=";
@@ -20,6 +20,9 @@
                 if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
             }
             return null;
+        },
+        inAdminPath: function () {
+            return location.toString().indexOf(StaticWeb.getAdminPath()) == 0;
         },
         getAdminPath: function () {
             var adminPath = '/staticweb/';
@@ -53,7 +56,7 @@
     var cookieName = 'staticweb-token';
     // If we have cookie, we are signed in and show load admin.
     var token = staticWeb.readCookie(cookieName);
-    if (token) {
+    if (token || staticWeb.inAdminPath()) {
         var path = staticWeb.getAdminPath();
         // Load admin script(s)
         staticWeb.includeScript(path + 'js/swadmin.js');
