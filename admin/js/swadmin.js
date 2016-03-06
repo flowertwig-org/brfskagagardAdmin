@@ -19,17 +19,13 @@
 
         this.storage = false;
             
-        // set folder location from staticweb.js
-        var path = this.getAdminPath()
-        this.loginPages = {};
-        this.loginPages[path] = true;
-        this.loginPages[path + 'index.html'] = true;
+        this.inAdminPath = location.toString().indexOf(StaticWeb.getAdminPath()) == 0;
 
         var token = this.getToken();
         // Do we have a valid token?
         if (token) {
             this.loadAdminState(token);
-        } else {
+        } else if (this.inAdminPath) {
             var button = document.getElementById('staticweb-login-btn')
             button.addEventListener('click', function () {
                 var input = document.getElementById('staticweb-login-token');
@@ -62,7 +58,7 @@
                             if (callStatus.isOK) {
                                 self.writeCookie(self.cookieName, token);
 
-                                if (location.href in self.loginPages) {
+                                if (self.inAdminPath) {
                                     self.showNavigation();
                                     self.removeLogin();
                                 }
