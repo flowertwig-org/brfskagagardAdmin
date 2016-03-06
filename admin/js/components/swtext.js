@@ -44,5 +44,5 @@
             });
         }
     }
-    staticWeb.components.swtext = new Text();
+    staticWeb.components.swText = new Text();
 })(window.StaticWeb);

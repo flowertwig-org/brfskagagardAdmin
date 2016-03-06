@@ -64,7 +64,7 @@
         init: function () {
             var self = this;
 
-            var elements = staticWeb.elements['flowertwigmoodimage'];
+            var elements = staticWeb.elements['flowertwig-moodimage'];
             for (var index = 0; index < elements.length; index++) {
                 var container = elements[index];
                 var mood = container.children[0];
