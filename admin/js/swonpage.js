@@ -2,28 +2,50 @@
 (function (sw) {
     var adminPath = sw.getAdminPath();
 
-    if (sw.config.onPage && sw.config.onPage.use) {
-        var nav = document.createElement('div');
+    var nav = document.createElement('div');
+    nav.className = 'sw-onpage-options';
+    nav.style.position = 'fixed';
+    nav.style.top = '0px';
+    nav.style.margin = '0 auto';
+    //nav.style.width = '100%';
+    nav.style.zIndex = '100000';
+    var header = document.createElement('div');
+    header.className = 'sw-onpage-options-header';
+    header.innerText = 'StaticWeb';
+    nav.appendChild(header);
 
-        nav.style.position = 'fixed';
-        nav.style.top = '0px';
-        nav.style.margin = '0 auto';
-        nav.style.width = '100%';
-        nav.style.zIndex = '100000';
+    var dragdown = document.createElement('div');
+    dragdown.className = 'sw-dragdown';
+    dragdown.addEventListener('click', function (event) {
+        document.body.classList.toggle('sw-onpage-options-show');
+        if (dragdown.innerText === '+') {
+            dragdown.innerText = '-';
 
-        var dragdown = document.createElement('div');
-        dragdown.innerText = '+';
-        dragdown.style.cursor = 'pointer';
-        dragdown.style.border = 'solid 1px lightgrey';
-        dragdown.style.borderTop = '0px';
-        dragdown.style.width = '1em';
-        dragdown.style.padding = '5px';
-        dragdown.style.fontWeight = 'bold';
-        dragdown.style.backgroundColor = '#2F5575';
-        dragdown.style.color = '#fff';
-        dragdown.style.borderRadius = '0 0 6px 0';
-        nav.appendChild(dragdown);
-        document.getElementsByTagName('body')[0].appendChild(nav);
-        //alert('on page option and navigation enabled');
+        } else {
+
+            dragdown.innerText = '+';
+        }
+    });
+
+    switch (sw.config.onPage.display) {
+        case 'onDemand':
+            dragdown.innerText = '+';
+            break;
+        case 'always':
+            dragdown.innerText = '-';
+            document.body.classList.toggle('sw-onpage-options-show');
+            break;
+        default:
+            break;
     }
+    nav.appendChild(dragdown);
+
+    var options = document.createElement('div');
+    options.className = 'sw-onpage-options-items';
+    var navigation = document.createElement('div');
+    navigation.innerText = '# Pending Changes\r\n# Navigation\r\n# Pages\r\n';
+    options.appendChild(navigation);
+    nav.appendChild(options);
+
+    document.getElementsByTagName('body')[0].appendChild(nav);
 })(StaticWeb);

@@ -1,6 +1,6 @@
 .sw-dragdown {
     cursor: pointer;
-    border: solid 1px lightgrey;
+    /*border: solid 1px lightgrey;*/
     border-top: 0px;
     width: 1em;
     padding: 5px;
@@ -38,4 +38,47 @@
     background-color: rgb(47, 85, 117);
     float: right;
     text-align: center;
+}
+.sw-onpage-options {
+    position: fixed;
+    top: 0px;
+    left: 0;
+    margin: 0 auto;
+    z-index: 100000;  
+    height: 100%;  
+}
+
+.sw-onpage-options-items,
+.sw-onpage-options-header {
+    display: none;
+}
+.sw-onpage-options-header {
+    width: 100%;
+    padding: 5px 0;
+    text-align: center;
+    background-color: rgb(47, 85, 117);
+    font-weight: bold;
+    color: rgb(255, 255, 255);
+}
+
+body.sw-onpage-options-show {
+    margin-left: 200px;
+}
+
+body.sw-onpage-options-show .sw-onpage-options-items,
+body.sw-onpage-options-show .sw-onpage-options-header {
+    display: inline-block;
+}
+body.sw-onpage-options-show .sw-onpage-options-header {
+    width: 100%;
+}
+
+
+body.sw-onpage-options-show .sw-onpage-options {
+    width: 200px;
+    border-right: solid 3px rgb(47, 85, 117);    
+}
+body.sw-onpage-options-show .sw-dragdown {
+    position: absolute;
+    display: inline-block;
 }

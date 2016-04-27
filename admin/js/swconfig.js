@@ -6,9 +6,10 @@
     }
     sw.config.cookieName = 'staticweb-token';
     sw.config.onPage = {
-        'use': true, // Tells StaticWeb show general menu, options and more not present as components on page
+        // Tells StaticWeb show general menu, options and more not present as components on page
+        'display': 'onDemand', // 'onDemand', 'always', 'no' 
         'navigation': {
-            'display': 'onDemand' // 'onDemand', 'Always', 'no'
+            'display': 'onDemand' // 'onDemand', 'always', 'no'
         }
     };
 })(StaticWeb);

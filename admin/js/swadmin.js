@@ -194,7 +194,7 @@
         var self = this;
         var adminPath = self.getAdminPath();
 
-        if (this.config.onPage && this.config.onPage.use) {
+        if (this.config.onPage && this.config.onPage.display !== 'no') {
                 this.includeScript(adminPath + 'js/swonpage.js');
         }
     }
