@@ -37,11 +37,21 @@
         }
     }
 
+    StaticWebDefinition.prototype.includeStyle = function (addr) {
+        var link = document.createElement('link');
+        link.type = 'text/css';
+        link.rel = 'stylesheet';
+        link.href = addr;
+        var s = document.getElementsByTagName('head')[0];
+        s.appendChild(link, s);
+    }
+
     StaticWebDefinition.prototype.loadAdminState = function (token) {
         var self = this;
         var adminPath = this.getAdminPath();
         this.loadComponents();
 
+        this.includeStyle(adminPath + 'css/swadmin.css');
         this.includeScript(adminPath + 'js/jStorage.js');
         this.includeScript(adminPath + 'js/swconfig.js');
         self.ensureLoaded('storage', self.config, function () {
@@ -265,9 +275,3 @@
     w.StaticWebDefinition = StaticWebDefinition;
     w.StaticWeb = StaticWebDefinition();
 })(window);
-
-
-
-
-
-
