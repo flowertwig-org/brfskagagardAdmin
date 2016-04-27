@@ -18,7 +18,7 @@
         this.elements = {};
 
         this.storage = false;
-            
+
         var token = this.getToken();
         // Do we have a valid token?
         if (token) {
@@ -59,8 +59,9 @@
                                 if (self.inAdminPath()) {
                                     self.showNavigation();
                                     self.removeLogin();
+                                } else {
+                                    self.loadOnPage();
                                 }
-
                                 self.config.storage.isReady = true;
                             } else {
                                 alert('Ogiltigt personligt åtkomsttoken.');
@@ -179,6 +180,14 @@
             }
         })
     }
+    StaticWebDefinition.prototype.loadOnPage = function () {
+        var self = this;
+        var adminPath = self.getAdminPath();
+
+        if (this.config.onPage && this.config.onPage.use) {
+                this.includeScript(adminPath + 'js/swonpage.js');
+        }
+    }
     StaticWebDefinition.prototype.loadComponents = function () {
         var self = this;
         var adminPath = self.getAdminPath();
@@ -197,7 +206,7 @@
                 self.elements[attr.value].push(element);
             }
         }
-            
+
         // Load all components we have found
         // We are waiting until we have gone through all elements because there can be multiple elements of same component type
         // and we want to be sure self.elements contains all of our types when component is loaded )
