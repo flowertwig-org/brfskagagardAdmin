@@ -102,9 +102,22 @@ body.sw-onpage-options-show .sw-onpage-options-item:nth-child(2n) {
 
 body.sw-onpage-options-show .sw-onpage-navigation-items {
     list-style-type: none;
-    padding: 15px;
+    padding: 15px 0;
     overflow-y: scroll;
     overflow-x: hidden;
+}
+
+body.sw-onpage-options-show .sw-onpage-navigation-item-selected {
+    padding: 5px 0;
+}
+
+body.sw-onpage-options-show .sw-onpage-navigation-item-selected a {
+    background-color: rgb(47, 85, 117);
+    padding: 5px;
+    border-radius: 5px;
+    width: 270px;
+    display: block;
+    color: white
 }
 
 body.sw-onpage-options-show .sw-onpage-navigation-items li {

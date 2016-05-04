@@ -50,54 +50,57 @@
     */
     var navigation = document.createElement('li');
     navigation.className = 'sw-onpage-options-item';
-    navigation.innerHTML = '<span>Navigation</span>';
-    navigation.addEventListener('click', function (e) {
-        navigation.innerHTML = "<span>Navigation</span>";
+    //navigation.innerHTML = '<span>Navigation</span>';
+    var navigationHeader = document.createElement('div');
+    navigationHeader.innerText = 'Navigation';
+    var navigationList = document.createElement('div');
 
-        sw.storage.list('/', function (list, callStatus) {
-            if (callStatus.isOK) {
-                var node = document.createElement("ul");
-                node.className = 'sw-onpage-navigation-items';
-                
-                var files = '';
-                var folders = '';
-                for (var index = 0; index < list.length; index++) {
-                    var item = list[index];
-                    if (item.name.indexOf('.html') > 0) {
-                        files += '<li title="' + item.name + '">' + item.name + '</li>';
-                   }else if (item.name.indexOf('.') === -1) {
-                       folders += '<li title="' + item.name + '">[+] ' + item.name + '</li>';
-                   }
-                }
-                
-                node.innerHTML = folders + files;
-                // node.innerHTML = '<li>/</li><li>/nyheter</li><li>/medlem<ul class="sw-onpage-navigation-items"><li>/ordningsregler</li></ul></li>';
-                navigation.appendChild(node);
-                console.log('navigation');
+    navigationHeader.addEventListener('click', function (e) {
+        if (navigation.hasAttribute('data-sw-nav-expandable')) {
+            var isHidden = navigationList.style.display === 'none';
+            if (isHidden) {
+                navigationList.style.display = 'block';
+                navigationHeader.style.paddingBottom = '5px';
+                navigationHeader.style.borderBottom = 'solid 3px rgb(47, 85, 117)';
+            } else {
+                navigationList.style.display = 'none';
+                navigationHeader.style.paddingBottom = '0';
+                navigationHeader.style.borderBottom = '0';
             }
-        });
+        } else {
+            sw.storage.list('/', function (list, callStatus) {
+                if (callStatus.isOK) {
+                    var node = document.createElement("ul");
+                    node.className = 'sw-onpage-navigation-items';
+
+                    var files = '';
+                    var folders = '';
+                    for (var index = 0; index < list.length; index++) {
+                        var item = list[index];
+                        var isSelected = (location.pathname === item.path) || (location.pathname + "index.html" === item.path);
+                        
+                        if (item.name.indexOf('.html') > 0) {
+                            files += '<li class="' + (isSelected ? 'sw-onpage-navigation-item-selected' : '') + '" title="' + item.name + '" data-sw-nav-item-path="' + item.path + '" data-sw-nav-item-type="file"><a href="' + item.path + '">' + item.name + '</a></li>';
+                        } else if (item.name.indexOf('.') === -1) {
+                            folders += '<li class="' + (isSelected ? 'sw-onpage-navigation-item-selected' : '') + '" title="' + item.name + '" data-sw-nav-item-path="' + item.path + '" data-sw-nav-item-type="folder">[+] <a href="' + item.path + '">' + item.name + '</a></li>';
+                        }
+                    }
+
+                    node.innerHTML = folders + files;
+                    navigationList.appendChild(node);
+                    navigation.setAttribute('data-sw-nav-expandable', '1');
+                    navigationHeader.style.paddingBottom = '5px';
+                    navigationHeader.style.borderBottom = 'solid 3px rgb(47, 85, 117)';
+                    console.log('navigation');
+                }
+            });
+        }
     });
 
+    navigation.appendChild(navigationHeader);
+    navigation.appendChild(navigationList);
+
     options.appendChild(navigation);
-
-    // navigation = document.createElement('li');
-    // navigation.className = 'sw-onpage-options-item';
-    // navigation.innerText = 'Navigation';
-    // options.appendChild(navigation);
-    // navigation = document.createElement('li');
-    // navigation.className = 'sw-onpage-options-item';
-    // navigation.innerText = 'Navigation';
-    // options.appendChild(navigation);
-    // nav.appendChild(options);
-    // navigation = document.createElement('li');
-    // navigation.className = 'sw-onpage-options-item';
-    // navigation.innerText = 'Navigation';
-    // options.appendChild(navigation);
-    // navigation = document.createElement('li');
-    // navigation.className = 'sw-onpage-options-item';
-    // navigation.innerText = 'Navigation';
-    // options.appendChild(navigation);
-
     nav.appendChild(options);
 
     document.getElementsByTagName('body')[0].appendChild(nav);
