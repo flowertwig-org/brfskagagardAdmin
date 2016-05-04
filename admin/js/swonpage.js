@@ -40,11 +40,64 @@
     }
     nav.appendChild(dragdown);
 
-    var options = document.createElement('div');
+    var options = document.createElement('ul');
     options.className = 'sw-onpage-options-items';
-    var navigation = document.createElement('div');
-    navigation.innerText = '# Pending Changes\r\n# Navigation\r\n# Pages\r\n';
+
+    /*
+        # Navigation
+        # Pending Changes
+        # Pages
+    */
+    var navigation = document.createElement('li');
+    navigation.className = 'sw-onpage-options-item';
+    navigation.innerHTML = '<span>Navigation</span>';
+    navigation.addEventListener('click', function (e) {
+        navigation.innerHTML = "<span>Navigation</span>";
+
+        sw.storage.list('/', function (list, callStatus) {
+            if (callStatus.isOK) {
+                var node = document.createElement("ul");
+                node.className = 'sw-onpage-navigation-items';
+                
+                var files = '';
+                var folders = '';
+                for (var index = 0; index < list.length; index++) {
+                    var item = list[index];
+                    if (item.name.indexOf('.html') > 0) {
+                        files += '<li title="' + item.name + '">' + item.name + '</li>';
+                   }else if (item.name.indexOf('.') === -1) {
+                       folders += '<li title="' + item.name + '">[+] ' + item.name + '</li>';
+                   }
+                }
+                
+                node.innerHTML = folders + files;
+                // node.innerHTML = '<li>/</li><li>/nyheter</li><li>/medlem<ul class="sw-onpage-navigation-items"><li>/ordningsregler</li></ul></li>';
+                navigation.appendChild(node);
+                console.log('navigation');
+            }
+        });
+    });
+
     options.appendChild(navigation);
+
+    // navigation = document.createElement('li');
+    // navigation.className = 'sw-onpage-options-item';
+    // navigation.innerText = 'Navigation';
+    // options.appendChild(navigation);
+    // navigation = document.createElement('li');
+    // navigation.className = 'sw-onpage-options-item';
+    // navigation.innerText = 'Navigation';
+    // options.appendChild(navigation);
+    // nav.appendChild(options);
+    // navigation = document.createElement('li');
+    // navigation.className = 'sw-onpage-options-item';
+    // navigation.innerText = 'Navigation';
+    // options.appendChild(navigation);
+    // navigation = document.createElement('li');
+    // navigation.className = 'sw-onpage-options-item';
+    // navigation.innerText = 'Navigation';
+    // options.appendChild(navigation);
+
     nav.appendChild(options);
 
     document.getElementsByTagName('body')[0].appendChild(nav);
