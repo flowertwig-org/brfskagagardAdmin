@@ -12,6 +12,9 @@
     function updateOnPage(onPageDisplay) {
         if (onPageDisplay) {
             document.cookie = "sw.onPage.display=" + onPageDisplay + ";max-age=" + (60 * 60);
+            if (onPageDisplay === "onDemand") {
+                updateNavigation("onDemand");
+            }
         }
     }
 
