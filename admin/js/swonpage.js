@@ -1,5 +1,90 @@
 /* global StaticWeb */
 (function (sw) {
+    function getOnPage() {
+        var onPageDisplaySetting = sw.config.onPage.display;
+        if (document.cookie.indexOf("sw.onPage.display=always") !== -1) {
+            onPageDisplaySetting = "always";
+        } else if (document.cookie.indexOf("sw.onPage.display=onDemand") !== -1) {
+            onPageDisplaySetting = "onDemand";
+        }
+        return onPageDisplaySetting;
+    }
+    function updateOnPage(onPageDisplay) {
+        if (onPageDisplay) {
+            document.cookie = "sw.onPage.display=" + onPageDisplay + ";max-age=" + (60 * 60);
+        }
+    }
+
+    function getNavigation() {
+        var onPageDisplaySetting = sw.config.onPage.navigation.display;
+        if (document.cookie.indexOf("sw.onPage.navigation.display=always") !== -1) {
+            onPageDisplaySetting = "always";
+        } else if (document.cookie.indexOf("sw.onPage.navigation.display=onDemand") !== -1) {
+            onPageDisplaySetting = "onDemand";
+        }
+        return onPageDisplaySetting;
+    }
+    function updateNavigation(onPageNavigationDisplay) {
+        if (onPageNavigationDisplay) {
+            document.cookie = "sw.onPage.navigation.display=" + onPageNavigationDisplay + ";max-age=" + (60 * 60);
+        }
+    }
+
+    function toggleOnPage(dragdown) {
+        if (document.body.classList.toggle('sw-onpage-options-show')) {
+            dragdown.innerText = '-';
+            updateOnPage("always");
+        } else {
+            dragdown.innerText = '+';
+            updateOnPage("onDemand");
+        }
+    }
+
+    function toggleNavigationItems(navigation, navigationHeader, navigationList) {
+        if (navigation.hasAttribute('data-sw-nav-expandable')) {
+            var isHidden = navigationList.style.display === 'none';
+            if (isHidden) {
+                updateNavigation("always");
+                navigationList.style.display = 'block';
+                navigationHeader.style.paddingBottom = '5px';
+                navigationHeader.style.borderBottom = 'solid 3px rgb(47, 85, 117)';
+            } else {
+                updateNavigation("no");
+                navigationList.style.display = 'none';
+                navigationHeader.style.paddingBottom = '0';
+                navigationHeader.style.borderBottom = '0';
+            }
+        } else {
+            updateNavigation("always");
+            sw.storage.list('/', function (list, callStatus) {
+                if (callStatus.isOK) {
+                    var node = document.createElement("ul");
+                    node.className = 'sw-onpage-navigation-items';
+
+                    var files = '';
+                    var folders = '';
+                    for (var index = 0; index < list.length; index++) {
+                        var item = list[index];
+                        var isSelected = (location.pathname === item.path) || (location.pathname + "index.html" === item.path);
+
+                        if (item.name.indexOf('.html') > 0) {
+                            files += '<li class="' + (isSelected ? 'sw-onpage-navigation-item-selected' : '') + '" title="' + item.name + '" data-sw-nav-item-path="' + item.path + '" data-sw-nav-item-type="file"><a href="' + item.path + '">' + item.name + '</a></li>';
+                        } else if (item.name.indexOf('.') === -1) {
+                            folders += '<li class="' + (isSelected ? 'sw-onpage-navigation-item-selected' : '') + '" title="' + item.name + '" data-sw-nav-item-path="' + item.path + '" data-sw-nav-item-type="folder">[+] <a href="' + item.path + '">' + item.name + '</a></li>';
+                        }
+                    }
+
+                    node.innerHTML = folders + files;
+                    navigationList.appendChild(node);
+                    navigation.setAttribute('data-sw-nav-expandable', '1');
+                    navigationHeader.style.paddingBottom = '5px';
+                    navigationHeader.style.borderBottom = 'solid 3px rgb(47, 85, 117)';
+                }
+            });
+        }
+
+    }
+
     var adminPath = sw.getAdminPath();
 
     var nav = document.createElement('div');
@@ -17,27 +102,9 @@
     var dragdown = document.createElement('div');
     dragdown.className = 'sw-dragdown';
     dragdown.addEventListener('click', function (event) {
-        document.body.classList.toggle('sw-onpage-options-show');
-        if (dragdown.innerText === '+') {
-            dragdown.innerText = '-';
-
-        } else {
-
-            dragdown.innerText = '+';
-        }
+        toggleOnPage(dragdown);
     });
 
-    switch (sw.config.onPage.display) {
-        case 'onDemand':
-            dragdown.innerText = '+';
-            break;
-        case 'always':
-            dragdown.innerText = '-';
-            document.body.classList.toggle('sw-onpage-options-show');
-            break;
-        default:
-            break;
-    }
     nav.appendChild(dragdown);
 
     var options = document.createElement('ul');
@@ -56,45 +123,7 @@
     var navigationList = document.createElement('div');
 
     navigationHeader.addEventListener('click', function (e) {
-        if (navigation.hasAttribute('data-sw-nav-expandable')) {
-            var isHidden = navigationList.style.display === 'none';
-            if (isHidden) {
-                navigationList.style.display = 'block';
-                navigationHeader.style.paddingBottom = '5px';
-                navigationHeader.style.borderBottom = 'solid 3px rgb(47, 85, 117)';
-            } else {
-                navigationList.style.display = 'none';
-                navigationHeader.style.paddingBottom = '0';
-                navigationHeader.style.borderBottom = '0';
-            }
-        } else {
-            sw.storage.list('/', function (list, callStatus) {
-                if (callStatus.isOK) {
-                    var node = document.createElement("ul");
-                    node.className = 'sw-onpage-navigation-items';
-
-                    var files = '';
-                    var folders = '';
-                    for (var index = 0; index < list.length; index++) {
-                        var item = list[index];
-                        var isSelected = (location.pathname === item.path) || (location.pathname + "index.html" === item.path);
-                        
-                        if (item.name.indexOf('.html') > 0) {
-                            files += '<li class="' + (isSelected ? 'sw-onpage-navigation-item-selected' : '') + '" title="' + item.name + '" data-sw-nav-item-path="' + item.path + '" data-sw-nav-item-type="file"><a href="' + item.path + '">' + item.name + '</a></li>';
-                        } else if (item.name.indexOf('.') === -1) {
-                            folders += '<li class="' + (isSelected ? 'sw-onpage-navigation-item-selected' : '') + '" title="' + item.name + '" data-sw-nav-item-path="' + item.path + '" data-sw-nav-item-type="folder">[+] <a href="' + item.path + '">' + item.name + '</a></li>';
-                        }
-                    }
-
-                    node.innerHTML = folders + files;
-                    navigationList.appendChild(node);
-                    navigation.setAttribute('data-sw-nav-expandable', '1');
-                    navigationHeader.style.paddingBottom = '5px';
-                    navigationHeader.style.borderBottom = 'solid 3px rgb(47, 85, 117)';
-                    console.log('navigation');
-                }
-            });
-        }
+        toggleNavigationItems(navigation, navigationHeader, navigationList);
     });
 
     navigation.appendChild(navigationHeader);
@@ -102,6 +131,22 @@
 
     options.appendChild(navigation);
     nav.appendChild(options);
+
+    var onPageDisplaySetting = getOnPage();
+    var onNavigation = getNavigation();
+    switch (onPageDisplaySetting) {
+        case 'onDemand':
+            dragdown.innerText = '+';
+            break;
+        case 'always':
+            toggleOnPage(dragdown);
+            break;
+        default:
+            break;
+    }
+    if (onNavigation === "always") {
+        toggleNavigationItems(navigation, navigationHeader, navigationList);
+    }
 
     document.getElementsByTagName('body')[0].appendChild(nav);
 })(StaticWeb);
