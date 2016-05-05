@@ -71,7 +71,12 @@
                         var isSelected = (location.pathname === item.path) || (location.pathname + "index.html" === item.path);
 
                         if (item.name.indexOf('.html') > 0) {
-                            files += '<li class="' + (isSelected ? 'sw-onpage-navigation-item-selected' : '') + '" title="' + item.name + '" data-sw-nav-item-path="' + item.path + '" data-sw-nav-item-type="file"><a href="' + item.path + '">' + item.name + '</a></li>';
+                            files += '<li class="' + (isSelected ? 'sw-onpage-navigation-item-selected' : '') + '" title="' + item.name + '" data-sw-nav-item-path="' + item.path + '" data-sw-nav-item-type="file"><span>';
+                            files += '<a href="' + item.path + '">' + item.name + '</a>';
+                            if (isSelected) {
+                                files += '<a href="#" title="Delete ' + item.name + '" class="sw-onpage-navigation-item-close">x</a>';
+                            }
+                            files += '</span></li>';
                         } else if (item.name.indexOf('.') === -1) {
                             folders += '<li class="' + (isSelected ? 'sw-onpage-navigation-item-selected' : '') + '" title="' + item.name + '" data-sw-nav-item-path="' + item.path + '" data-sw-nav-item-type="folder">[+] <a href="' + item.path + '">' + item.name + '</a></li>';
                         }

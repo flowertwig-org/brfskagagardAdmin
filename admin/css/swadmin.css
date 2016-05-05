@@ -111,13 +111,30 @@ body.sw-onpage-options-show .sw-onpage-navigation-item-selected {
     padding: 5px 0;
 }
 
-body.sw-onpage-options-show .sw-onpage-navigation-item-selected a {
+body.sw-onpage-options-show .sw-onpage-navigation-item-selected span {
     background-color: rgb(47, 85, 117);
     padding: 5px;
     border-radius: 5px;
     width: 270px;
     display: block;
-    color: white
+}
+
+body.sw-onpage-options-show .sw-onpage-navigation-item-selected a {
+    color: #fff;
+}
+
+body.sw-onpage-options-show .sw-onpage-navigation-item-selected .sw-onpage-navigation-item-close {
+    float: right;
+    color: #fff;
+    background-color: red;
+    width: 18px;
+    height: 14px;
+    display: inline-block;
+    text-align: center;
+    border-radius: 20px;
+    padding-bottom: 4px;
+    font-size: 12px;
+    text-decoration: none;
 }
 
 body.sw-onpage-options-show .sw-onpage-navigation-items li {
