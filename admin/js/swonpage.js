@@ -74,7 +74,8 @@
                             files += '<li class="' + (isSelected ? 'sw-onpage-navigation-item-selected' : '') + '" title="' + item.name + '" data-sw-nav-item-path="' + item.path + '" data-sw-nav-item-type="file"><span>';
                             files += '<a href="' + item.path + '">' + item.name + '</a>';
                             if (isSelected) {
-                                files += '<a href="#" title="Delete ' + item.name + '" class="sw-onpage-navigation-item-close">x</a>';
+                                files += '<a href="#" title="Delete ' + item.name + '" class="sw-onpage-navigation-item-delete">x</a>';
+                                files += '<a href="#" title="Add a sub-page for ' + item.name + '" class="sw-onpage-navigation-item-add">+</a>';
                             }
                             files += '</span></li>';
                         } else if (item.name.indexOf('.') === -1) {
