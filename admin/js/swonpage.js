@@ -82,9 +82,9 @@
                         var isSelected = (location.pathname === item.path) || (location.pathname + "index.html" === item.path);
 
                         if (item.name.indexOf('.') === -1) {
-                            folders += '<li class="' + (isSelected ? 'sw-onpage-navigation-item-selected' : '') + '" title="' + item.name + '" data-sw-nav-item-path="' + item.path + '" data-sw-nav-item-type="folder">[+] <a href="' + item.path + '">' + displayName + '</a></li>';
+                            folders += '<li class="' + (isSelected ? 'sw-onpage-navigation-item-selected' : '') + '" title="' + item.name + '" data-sw-nav-item-path="' + item.path + '" data-sw-nav-item-folder="' + displayName + '" data-sw-nav-item-type="folder">[+] <a href="' + item.path + '">' + displayName + '</a></li>';
                         } else {
-                            files += '<li class="' + (isSelected ? 'sw-onpage-navigation-item-selected' : '') + '" title="' + item.name + '" data-sw-nav-item-path="' + item.path + '" data-sw-nav-item-type="file"><span>';
+                            files += '<li class="' + (isSelected ? 'sw-onpage-navigation-item-selected' : '') + '" title="' + item.name + '" data-sw-nav-item-path="' + item.path + '" data-sw-nav-item-folder="' + displayName + '" data-sw-nav-item-type="file"><span>';
                             files += '<a href="' + item.path + '" class="sw-onpage-navigation-item-link">' + displayName + '</a>';
                             if (isSelected) {
                                 files += '<a href="#" title="Delete ' + item.name + '" class="sw-onpage-navigation-item-delete">x</a>';
@@ -100,6 +100,7 @@
                     node.addEventListener('click', function (e) {
                         if (e.target.classList.contains('sw-onpage-navigation-item-add')) {
                             var addr = e.target.parentNode.parentNode.getAttribute('data-sw-nav-item-path');
+                            var folder = e.target.parentNode.parentNode.getAttribute('data-sw-nav-item-folder');
 
                             console.log('add', addr);
                             var dialog = document.createElement('div');
@@ -112,9 +113,9 @@
                             var dialogContent = document.createElement('div');
                             dialogContent.className = 'sw-dialog-content';
                             dialog.appendChild(dialogContent);
-                            
+
                             var pageNameElement = document.createElement('div');
-                            pageNameElement.innerHTML = '<b style="display:block;padding:5px;padding-bottom:10px">Page name:</b><input type="text" style="font-size:20px" />';
+                            pageNameElement.innerHTML = '<b style="display:block;padding:5px;padding-bottom:10px">Page name:</b><input id="sw-onpage-createpage-parent" type="hidden" value="' + folder + '" /><input id="sw-onpage-createpage-name" type="text" style="font-size:20px" />';
                             dialogContent.appendChild(pageNameElement);
 
                             var templates = document.createElement('div');
@@ -123,7 +124,8 @@
 
                             document.getElementsByTagName('body')[0].appendChild(dialog);
 
-                            sw.storage.list('/admin/templates/page/', function (info, status) {
+                            var adminPath = sw.getAdminPath().replace(location.protocol + '//' + location.host, '');
+                            sw.storage.list(adminPath + 'templates/page/', function (info, status) {
                                 if (status.isOK) {
                                     var list = arguments[0];
                                     var elements = [];
@@ -132,11 +134,23 @@
                                         var isPreview = list[i].path.indexOf('.jpg') > 0 || list[i].path.indexOf('.jpeg') > 0 || list[i].path.indexOf('.png') > 0 || list[i].path.indexOf('.gif') > 0;
                                         if (isPreview) {
                                             var name = list[i].name.replace('.jpg', '').replace('.jpeg', '').replace('.png', '').replace('.gif', '');
-                                            elements.push('<div style="margin:5px;padding:1px;width:250px;display:inline-block;background-color:#2F5575;color:#fff;vertical-align:top;border-radius:6px;"><b style="display:block;padding:4px">' + name + '</b><img src="' + list[i].path + '" width="100%" style="cursor:pointer" /></div>');
+                                            var path = list[i].path.replace('.jpg', '').replace('.jpeg', '').replace('.png', '').replace('.gif', '') + '.html';
+                                            elements.push('<div class="sw-onpage-navigation-createpage-template" data-sw-onpage-createpage-template="' + path + '" style="margin:5px;padding:1px;width:250px;display:inline-block;background-color:#2F5575;color:#fff;vertical-align:top;border-radius:6px;"><b style="display:block;padding:4px">' + name + '</b><img src="' + list[i].path + '" width="100%" style="cursor:pointer" /></div>');
 
                                         }
                                     }
                                     templates.innerHTML = elements.join('');
+                                    templates.addEventListener('click', function (e) {
+                                        var el = e.target.parentNode;
+                                        if (el.classList.contains('sw-onpage-navigation-createpage-template')) {
+                                            var inputName = document.getElementById('sw-onpage-createpage-name');
+                                            var inputFolder = document.getElementById('sw-onpage-createpage-parent');
+                                            var pageName = inputFolder.value + inputName.value + '/index.html';
+                                            var templateLocation = el.getAttribute('data-sw-onpage-createpage-template');
+                                            sw.addPage(pageName, templateLocation);
+                                            console.log('template', pageName, templateLocation);
+                                        }
+                                    });
                                 }
                             });
                         }

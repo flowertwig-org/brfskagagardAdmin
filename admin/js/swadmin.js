@@ -69,9 +69,8 @@
                                 if (self.inAdminPath()) {
                                     self.showNavigation();
                                     self.removeLogin();
-                                } else {
-                                    self.loadOnPage();
                                 }
+                                self.loadOnPage();
                                 self.config.storage.isReady = true;
                             } else {
                                 alert('Ogiltigt personligt åtkomsttoken.');
@@ -91,6 +90,20 @@
                 alert('saved');
             } else {
                 alert('fail, error code: 1');
+            }
+        });
+    }
+    StaticWebDefinition.prototype.addPage = function (pageName, templatePath) {
+        var self = this;
+        this.storage.get(templatePath, function (file, callStatus) {
+            if (callStatus.isOK) {
+                var data = file.data;
+                // Disallowed chars regex
+                var regexp = /([^a-z0-9!{}<>/\;&#\:\ \=\\r\\n\\t\"\'\%\*\-\.\,\(\)\@])/gi;
+                data = data ? data.replace(regexp, '') : '';
+                self.addResource(pageName, data);
+            } else {
+                alert('fail, error code: 2');
             }
         });
     }
@@ -195,7 +208,7 @@
         var adminPath = self.getAdminPath();
 
         if (this.config.onPage && this.config.onPage.display !== 'no') {
-                this.includeScript(adminPath + 'js/swonpage.js');
+            this.includeScript(adminPath + 'js/swonpage.js');
         }
     }
     StaticWebDefinition.prototype.loadComponents = function () {
