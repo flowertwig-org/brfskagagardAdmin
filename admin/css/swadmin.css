@@ -1,6 +1,5 @@
 .sw-dragdown {
     cursor: pointer;
-    /*border: solid 1px lightgrey;*/
     border-top: 0px;
     width: 1em;
     padding: 5px;
@@ -93,6 +92,9 @@ body.sw-onpage-options-show .sw-onpage-options-item {
     list-style-type: none;
     padding: 5px 10px;
     border-bottom: solid 3px rgb(47, 85, 117);
+}
+
+body.sw-onpage-options-show .sw-onpage-options-item-header {
     cursor: pointer;
 }
 
@@ -108,6 +110,7 @@ body.sw-onpage-options-show .sw-onpage-navigation-items {
 }
 
 body.sw-onpage-options-show .sw-onpage-navigation-item-selected {
+    position: relative;
     padding: 5px 0;
 }
 
@@ -121,6 +124,22 @@ body.sw-onpage-options-show .sw-onpage-navigation-item-selected span {
 
 body.sw-onpage-options-show .sw-onpage-navigation-item-selected a {
     color: #fff;
+}
+
+body.sw-onpage-options-show .sw-onpage-navigation-item-link {
+    display: inline-block;
+    width: 220px;
+    text-decoration: none;
+    overflow-x: hidden;
+}
+
+body.sw-onpage-options-show .sw-onpage-navigation-item-link::before {
+    content: ' ';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 370px;
+    bottom: 0;
 }
 
 body.sw-onpage-options-show .sw-onpage-navigation-item-selected .sw-onpage-navigation-item-delete {
@@ -155,7 +174,7 @@ body.sw-onpage-options-show .sw-onpage-navigation-item-selected .sw-onpage-navig
 }
 
 body.sw-onpage-options-show .sw-onpage-navigation-items li {
-    width: 600px;
+    /*width: 300px;*/
 }
 
 @media screen and (max-height: 100px) {
@@ -198,3 +217,38 @@ body.sw-onpage-options-show .sw-onpage-navigation-items li {
         max-height: 660px;
     }
 }
+
+.sw-dialog {
+    position: fixed;
+    top: 0px;
+    left: 0;
+    margin: 0 auto;
+    z-index: 100001;  
+    height: 100%;
+    width: 100%;
+    background-color: #fff;
+}
+.sw-dialog .sw-onpage-options-header {
+    text-align: left;
+    padding-left: 10px;
+}
+
+.sw-dialog .sw-onpage-navigation-item-close {
+    float: right;
+    color: #fff;
+    width: 18px;
+    height: 14px;
+    display: inline-block;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    text-decoration: none;
+    margin-right: 9px;
+}
+
+.sw-dialog .sw-dialog-content {
+    padding: 15px;
+    overflow-y: scroll;
+    height: 100%;
+}
+

@@ -2,16 +2,18 @@
 (function (sw) {
     function getOnPage() {
         var onPageDisplaySetting = sw.config.onPage.display;
-        if (document.cookie.indexOf("sw.onPage.display=always") !== -1) {
+        var tmp = localStorage.getItem("sw.onPage.display");
+        if (tmp === "always") {
             onPageDisplaySetting = "always";
-        } else if (document.cookie.indexOf("sw.onPage.display=onDemand") !== -1) {
+        } else if (tmp === "onDemand") {
             onPageDisplaySetting = "onDemand";
         }
         return onPageDisplaySetting;
     }
+
     function updateOnPage(onPageDisplay) {
         if (onPageDisplay) {
-            document.cookie = "sw.onPage.display=" + onPageDisplay + ";max-age=" + (60 * 60);
+            localStorage.setItem('sw.onPage.display', onPageDisplay);
             if (onPageDisplay === "onDemand") {
                 updateNavigation("onDemand");
             }
@@ -20,16 +22,18 @@
 
     function getNavigation() {
         var onPageDisplaySetting = sw.config.onPage.navigation.display;
-        if (document.cookie.indexOf("sw.onPage.navigation.display=always") !== -1) {
+        var tmp = localStorage.getItem("sw.onPage.navigation.display");
+        if (tmp === "always") {
             onPageDisplaySetting = "always";
-        } else if (document.cookie.indexOf("sw.onPage.navigation.display=onDemand") !== -1) {
+        } else if (tmp === "onDemand") {
             onPageDisplaySetting = "onDemand";
         }
         return onPageDisplaySetting;
     }
+
     function updateNavigation(onPageNavigationDisplay) {
         if (onPageNavigationDisplay) {
-            document.cookie = "sw.onPage.navigation.display=" + onPageNavigationDisplay + ";max-age=" + (60 * 60);
+            localStorage.setItem('sw.onPage.navigation.display', onPageNavigationDisplay);
         }
     }
 
@@ -52,7 +56,7 @@
                 navigationHeader.style.paddingBottom = '5px';
                 navigationHeader.style.borderBottom = 'solid 3px rgb(47, 85, 117)';
             } else {
-                updateNavigation("no");
+                updateNavigation("onDemand");
                 navigationList.style.display = 'none';
                 navigationHeader.style.paddingBottom = '0';
                 navigationHeader.style.borderBottom = '0';
@@ -68,23 +72,83 @@
                     var folders = '';
                     for (var index = 0; index < list.length; index++) {
                         var item = list[index];
+
+                        if (!sw.inAdminPath() && sw.config.onPage.navigation.ignorePaths.indexOf(item.name) !== -1) {
+                            continue;
+                        }
+
+                        var displayName = item.path.replace('index.html', '');
+
                         var isSelected = (location.pathname === item.path) || (location.pathname + "index.html" === item.path);
 
-                        if (item.name.indexOf('.html') > 0) {
+                        if (item.name.indexOf('.') === -1) {
+                            folders += '<li class="' + (isSelected ? 'sw-onpage-navigation-item-selected' : '') + '" title="' + item.name + '" data-sw-nav-item-path="' + item.path + '" data-sw-nav-item-type="folder">[+] <a href="' + item.path + '">' + displayName + '</a></li>';
+                        } else {
                             files += '<li class="' + (isSelected ? 'sw-onpage-navigation-item-selected' : '') + '" title="' + item.name + '" data-sw-nav-item-path="' + item.path + '" data-sw-nav-item-type="file"><span>';
-                            files += '<a href="' + item.path + '">' + item.name + '</a>';
+                            files += '<a href="' + item.path + '" class="sw-onpage-navigation-item-link">' + displayName + '</a>';
                             if (isSelected) {
                                 files += '<a href="#" title="Delete ' + item.name + '" class="sw-onpage-navigation-item-delete">x</a>';
                                 files += '<a href="#" title="Add a sub-page for ' + item.name + '" class="sw-onpage-navigation-item-add">+</a>';
                             }
                             files += '</span></li>';
-                        } else if (item.name.indexOf('.') === -1) {
-                            folders += '<li class="' + (isSelected ? 'sw-onpage-navigation-item-selected' : '') + '" title="' + item.name + '" data-sw-nav-item-path="' + item.path + '" data-sw-nav-item-type="folder">[+] <a href="' + item.path + '">' + item.name + '</a></li>';
                         }
                     }
 
                     node.innerHTML = folders + files;
                     navigationList.appendChild(node);
+
+                    node.addEventListener('click', function (e) {
+                        if (e.target.classList.contains('sw-onpage-navigation-item-add')) {
+                            var addr = e.target.parentNode.parentNode.getAttribute('data-sw-nav-item-path');
+
+                            console.log('add', addr);
+                            var dialog = document.createElement('div');
+                            dialog.className = 'sw-dialog';
+                            var dialogHeader = document.createElement('div');
+                            dialogHeader.className = 'sw-onpage-options-header';
+                            dialogHeader.innerHTML = 'StaticWeb - Create new page<a href="#" title="Close dialog" class="sw-onpage-navigation-item-close">x</a>';
+                            dialog.appendChild(dialogHeader);
+
+                            var dialogContent = document.createElement('div');
+                            dialogContent.className = 'sw-dialog-content';
+                            dialog.appendChild(dialogContent);
+                            
+                            var pageNameElement = document.createElement('div');
+                            pageNameElement.innerHTML = '<b style="display:block;padding:5px;padding-bottom:10px">Page name:</b><input type="text" style="font-size:20px" />';
+                            dialogContent.appendChild(pageNameElement);
+
+                            var templates = document.createElement('div');
+                            templates.innerHTML = '<b style="display:block;padding:5px;padding-bottom:10px;padding-top:30px">Choose template to use:</b>loading page templates...';
+                            dialogContent.appendChild(templates);
+
+                            document.getElementsByTagName('body')[0].appendChild(dialog);
+
+                            sw.storage.list('/admin/templates/page/', function (info, status) {
+                                if (status.isOK) {
+                                    var list = arguments[0];
+                                    var elements = [];
+                                    elements.push('<b style="display:block;padding:5px;padding-bottom:10px;padding-top:30px">Choose template to use:</b>');
+                                    for (var i = 0; i < list.length; i++) {
+                                        var isPreview = list[i].path.indexOf('.jpg') > 0 || list[i].path.indexOf('.jpeg') > 0 || list[i].path.indexOf('.png') > 0 || list[i].path.indexOf('.gif') > 0;
+                                        if (isPreview) {
+                                            var name = list[i].name.replace('.jpg', '').replace('.jpeg', '').replace('.png', '').replace('.gif', '');
+                                            elements.push('<div style="margin:5px;padding:1px;width:250px;display:inline-block;background-color:#2F5575;color:#fff;vertical-align:top;border-radius:6px;"><b style="display:block;padding:4px">' + name + '</b><img src="' + list[i].path + '" width="100%" style="cursor:pointer" /></div>');
+
+                                        }
+                                    }
+                                    templates.innerHTML = elements.join('');
+                                }
+                            });
+                        }
+                        else if (e.target.classList.contains('sw-onpage-navigation-item-delete')) {
+                            var addr = e.target.parentNode.parentNode.getAttribute('data-sw-nav-item-path');
+                            if (confirm('Are you sure you want to delete "' + addr + '"?')) {
+                                console.log('delete', addr);
+                            }
+                        }
+                        //console.log(e.target); 
+                    });
+
                     navigation.setAttribute('data-sw-nav-expandable', '1');
                     navigationHeader.style.paddingBottom = '5px';
                     navigationHeader.style.borderBottom = 'solid 3px rgb(47, 85, 117)';
@@ -98,11 +162,6 @@
 
     var nav = document.createElement('div');
     nav.className = 'sw-onpage-options';
-    nav.style.position = 'fixed';
-    nav.style.top = '0px';
-    nav.style.margin = '0 auto';
-    //nav.style.width = '100%';
-    nav.style.zIndex = '100000';
     var header = document.createElement('div');
     header.className = 'sw-onpage-options-header';
     header.innerText = 'StaticWeb';
@@ -126,8 +185,8 @@
     */
     var navigation = document.createElement('li');
     navigation.className = 'sw-onpage-options-item';
-    //navigation.innerHTML = '<span>Navigation</span>';
     var navigationHeader = document.createElement('div');
+    navigationHeader.className = 'sw-onpage-options-item-header'
     navigationHeader.innerText = 'Navigation';
     var navigationList = document.createElement('div');
 
