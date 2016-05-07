@@ -77,21 +77,37 @@
                             continue;
                         }
 
-                        var displayName = item.path.replace('index.html', '');
-
-                        var isSelected = (location.pathname === item.path) || (location.pathname + "index.html" === item.path);
-
-                        if (item.name.indexOf('.') === -1) {
-                            folders += '<li class="' + (isSelected ? 'sw-onpage-navigation-item-selected' : '') + '" title="' + item.name + '" data-sw-nav-item-path="' + item.path + '" data-sw-nav-item-folder="' + displayName + '" data-sw-nav-item-type="folder">[+] <a href="' + item.path + '">' + displayName + '</a></li>';
-                        } else {
-                            files += '<li class="' + (isSelected ? 'sw-onpage-navigation-item-selected' : '') + '" title="' + item.name + '" data-sw-nav-item-path="' + item.path + '" data-sw-nav-item-folder="' + displayName + '" data-sw-nav-item-type="file"><span>';
-                            files += '<a href="' + item.path + '" class="sw-onpage-navigation-item-link">' + displayName + '</a>';
-                            if (isSelected) {
-                                files += '<a href="#" title="Delete ' + item.name + '" class="sw-onpage-navigation-item-delete">x</a>';
-                                files += '<a href="#" title="Add a sub-page for ' + item.name + '" class="sw-onpage-navigation-item-add">+</a>';
-                            }
-                            files += '</span></li>';
+                        var displayName = item.path.replace('/index.html', '');
+                        if (displayName.length > 0 && displayName[displayName.length - 1] === '/') {
+                            displayName = displayName.substring(0, displayName.length - 1)
                         }
+                        if (displayName === '') {
+                            displayName = '/';
+                        }
+
+                        var locationPath = location.pathname.replace('/index.html', '');
+                        if (locationPath.length > 0 && locationPath[locationPath.length - 1] === '/') {
+                            locationPath = locationPath.substring(0, locationPath.length - 1)
+                        }
+
+                        if (locationPath === '') {
+                            locationPath = '/';
+                        }
+
+                        var isSelected = (locationPath === displayName);
+                        console.log('isSelected', location.pathname, item.path);
+
+                        // if (item.name.indexOf('.') === -1) {
+                        //     folders += '<li class="' + (isSelected ? 'sw-onpage-navigation-item-selected' : '') + '" title="' + item.name + '" data-sw-nav-item-path="' + item.path + '" data-sw-nav-item-folder="' + displayName + '" data-sw-nav-item-type="folder">[+] <a href="' + item.path + '">' + displayName + '</a></li>';
+                        // } else {
+                        files += '<li class="' + (isSelected ? 'sw-onpage-navigation-item-selected' : '') + '" title="' + item.name + '" data-sw-nav-item-path="' + item.path + '" data-sw-nav-item-folder="' + displayName + '" data-sw-nav-item-type="file"><span>';
+                        files += '<a href="' + item.path + '" class="sw-onpage-navigation-item-link">' + displayName + '</a>';
+                        if (isSelected) {
+                            files += '<a href="#" title="Delete ' + item.name + '" class="sw-onpage-navigation-item-delete">x</a>';
+                            files += '<a href="#" title="Add a sub-page for ' + item.name + '" class="sw-onpage-navigation-item-add">+</a>';
+                        }
+                        files += '</span></li>';
+                        // }
                     }
 
                     node.innerHTML = folders + files;
@@ -145,7 +161,7 @@
                                         if (el.classList.contains('sw-onpage-navigation-createpage-template')) {
                                             var inputName = document.getElementById('sw-onpage-createpage-name');
                                             var inputFolder = document.getElementById('sw-onpage-createpage-parent');
-                                            var pageName = inputFolder.value + inputName.value + '/index.html';
+                                            var pageName = inputFolder.value + '/' + inputName.value + '/index.html';
                                             var templateLocation = el.getAttribute('data-sw-onpage-createpage-template');
                                             sw.addPage(pageName, templateLocation);
                                             console.log('template', pageName, templateLocation);
@@ -157,7 +173,11 @@
                         else if (e.target.classList.contains('sw-onpage-navigation-item-delete')) {
                             var addr = e.target.parentNode.parentNode.getAttribute('data-sw-nav-item-path');
                             if (confirm('Are you sure you want to delete "' + addr + '"?')) {
-                                console.log('delete', addr);
+                                sw.storage.del(addr + '/index.html', function (status) {
+                                    if (status.isOK) {
+                                        console.log('successfully deleted page', addr);
+                                    }
+                                })
                             }
                         }
                         //console.log(e.target); 
