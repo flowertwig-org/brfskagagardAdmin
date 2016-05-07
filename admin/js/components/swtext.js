@@ -25,7 +25,7 @@
         init: function () {
             var self = this;
 
-            staticWeb.includeScript("//tinymce.cachefly.net/4.3/tinymce.min.js");
+            staticWeb.includeScript("//cdn.tinymce.com/4/tinymce.min.js");
             staticWeb.ensureLoaded('tinymce', window, function () {
                 var elements = staticWeb.elements['swtext'];
                 for (var index = 0; index < elements.length; index++) {
