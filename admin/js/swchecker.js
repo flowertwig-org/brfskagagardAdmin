@@ -22,7 +22,7 @@
             return null;
         },
         inAdminPath: function () {
-            return location.toString().indexOf(StaticWeb.getAdminPath()) == 0;
+            return location.toString().indexOf(StaticWeb.getAdminPath()) !== -1;
         },
         getAdminPath: function () {
             var adminPath = '/staticweb/';
