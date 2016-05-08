@@ -187,6 +187,9 @@
                         var pageName = inputFolder.value + inputName.value + '/index.html';
                         var templateLocation = el.getAttribute('data-sw-onpage-createpage-template');
                         sw.addPage(pageName, templateLocation);
+                        setTimeout(function() {
+                            location.reload();
+                        }, 2000);
                     }
                 });
             }
@@ -248,6 +251,18 @@
                     sw.storage.del(addr + 'index.html', function (status) {
                         if (status.isOK) {
                             console.log('successfully deleted page', addr);
+                            
+                            var tmp = getPath(addr);
+                            var arr = tmp.split('/');
+                            while (arr.pop() === '') {
+                                // Remove all empty items in the back.
+                            }
+                            arr.pop(); // remove page
+                            tmp = arr.join('/');
+                            if (tmp == '') {
+                                tmp = '/';
+                            }
+                            location.assign(tmp); // change location to parent
                         }
                     })
                 }
