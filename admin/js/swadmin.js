@@ -319,7 +319,9 @@
         mood.className = "mood";
 
         var callToAction = document.getElementsByClassName('call-to-action')[0];
-        callToAction.remove();
+        if (callToAction) {
+            callToAction.remove();
+        }
     }
 
     w.StaticWebDefinition = StaticWebDefinition;
