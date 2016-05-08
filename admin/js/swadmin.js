@@ -36,6 +36,39 @@
             });
         }
     }
+    
+    StaticWebDefinition.prototype.setSetting = function(key, value) {
+        localStorage.setItem(key, value);
+    }
+    StaticWebDefinition.prototype.getUserSetting = function(key) {
+        var value = localStorage.getItem(key);
+        return value;
+    }
+    
+    StaticWebDefinition.prototype.getSetting = function(key) {
+        var obj = this.getUserSetting(key);
+        if (!obj) {
+            var keys = key.split('.').reverse();
+            return this.getSettingFromObject(keys, window);
+        }
+        return obj;
+    }
+
+    StaticWebDefinition.prototype.getSettingFromObject = function(keys, obj) {
+        var key = keys.pop();
+
+        if (key === "sw") {
+            key = "StaticWeb";
+        }
+
+        if (keys.length) {
+            var obj = obj[key];
+            return this.getSettingFromObject(keys, obj);
+        } else {
+            var value = obj[key];
+            return value;
+        }
+    }
 
     StaticWebDefinition.prototype.includeStyle = function (addr) {
         var link = document.createElement('link');
