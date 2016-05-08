@@ -52,14 +52,14 @@
                 index = orgImage.indexOf('/img/mood');
                 orgImage = orgImage.substring(index);
                 orgImage = orgImage.substring(0, orgImage.length - 1);
-                container.setAttribute('data-mood-orginal', '.' + orgImage);
+                container.setAttribute('data-mood-orginal', orgImage);
             }
 
             var image = event.target.src;
             index = image.indexOf('/img/mood');
             image = image.substring(index);
             orgImage = image.substring(0, image.length - 1);
-            container.style.backgroundImage = 'url(.' + image + ')';
+            container.style.backgroundImage = 'url(' + image + ')';
         },
         init: function () {
             var self = this;
