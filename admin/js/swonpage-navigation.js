@@ -245,7 +245,7 @@
             else if (e.target.classList.contains('sw-onpage-navigation-item-delete')) {
                 var addr = e.target.parentNode.parentNode.getAttribute('data-sw-nav-item-path');
                 if (confirm('Are you sure you want to delete "' + addr + '"?')) {
-                    sw.storage.del(addr + '/index.html', function (status) {
+                    sw.storage.del(addr + 'index.html', function (status) {
                         if (status.isOK) {
                             console.log('successfully deleted page', addr);
                         }
