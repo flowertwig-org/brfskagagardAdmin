@@ -78,16 +78,16 @@
                         }
 
                         var displayName = item.path.replace('/index.html', '');
-                        if (displayName.length > 0 && displayName[displayName.length - 1] === '/') {
-                            displayName = displayName.substring(0, displayName.length - 1)
+                        if (displayName.length > 0 && displayName[displayName.length - 1] !== '/') {
+                            displayName = displayName + '/';
                         }
                         if (displayName === '') {
                             displayName = '/';
                         }
 
                         var locationPath = location.pathname.replace('/index.html', '');
-                        if (locationPath.length > 0 && locationPath[locationPath.length - 1] === '/') {
-                            locationPath = locationPath.substring(0, locationPath.length - 1)
+                        if (locationPath.length > 0 && locationPath[locationPath.length - 1] !== '/') {
+                            locationPath = locationPath + '/';
                         }
 
                         if (locationPath === '') {
@@ -161,7 +161,7 @@
                                         if (el.classList.contains('sw-onpage-navigation-createpage-template')) {
                                             var inputName = document.getElementById('sw-onpage-createpage-name');
                                             var inputFolder = document.getElementById('sw-onpage-createpage-parent');
-                                            var pageName = inputFolder.value + '/' + inputName.value + '/index.html';
+                                            var pageName = inputFolder.value + inputName.value + '/index.html';
                                             var templateLocation = el.getAttribute('data-sw-onpage-createpage-template');
                                             sw.addPage(pageName, templateLocation);
                                             console.log('template', pageName, templateLocation);
