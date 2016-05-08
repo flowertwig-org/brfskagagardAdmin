@@ -39,6 +39,10 @@
                     break;
                 }
             }
+            if (adminPath){
+                adminPath = adminPath.replace(location.protocol + '//' + location.host, '');
+            }
+            
             return adminPath;
         },
         includeScript: function (addr) {
