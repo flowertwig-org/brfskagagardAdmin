@@ -188,8 +188,8 @@
                         var templateLocation = el.getAttribute('data-sw-onpage-createpage-template');
                         sw.addPage(pageName, templateLocation);
                         setTimeout(function() {
-                            location.reload();
-                        }, 2000);
+                            location.assign(getPath(pageName)); // change location to parent
+                        }, 1000);
                     }
                 });
             }
