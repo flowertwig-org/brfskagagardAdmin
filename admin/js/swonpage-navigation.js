@@ -49,14 +49,14 @@
         if (name.length > 0 && name[name.length - 1] === '/') {
             name = name.substring(0, name.length - 1);
         }
-        
+
         var tmp = name.split('/');
         name = tmp[tmp.length - 1];
-        
+
         if (name === '') {
             name = '/';
         }
-        
+
         return name;
     }
 
@@ -105,14 +105,14 @@
         }
         return 0;
     }
-    
+
     function createNodeWithItems(list) {
         var node = document.createElement("ul");
         node.className = 'sw-onpage-navigation-items';
-        
+
         // Sort items
         list.sort(sortItems);
-        
+
         // Remove duplicates
         var index = 0;
         var prevNodePath = false;
@@ -120,12 +120,12 @@
             var tmpPath = list[index].path;
             if (prevNodePath === tmpPath) {
                 list.splice(index, 1);
-            }else {
+            } else {
                 index++;
             }
             prevNodePath = tmpPath;
-        }        
-        
+        }
+
         var files = '';
         var folders = '';
         var depth = 0;
@@ -186,14 +186,51 @@
                         var inputFolder = document.getElementById('sw-onpage-createpage-parent');
                         var pageName = inputFolder.value + inputName.value + '/index.html';
                         var templateLocation = el.getAttribute('data-sw-onpage-createpage-template');
-                        sw.addPage(pageName, templateLocation);
-                        setTimeout(function() {
-                            location.assign(getPath(pageName)); // change location to parent
-                        }, 1000);
+                        var resultAddress = getPath(pageName);
+                        sw.addPage(pageName, templateLocation, function () {
+                            dialogContent.innerHTML = "waiting for servers to empty cache, please wait";
+                            waitUntilReady(resultAddress);
+                        });
                     }
                 });
             }
         });
+    }
+
+    function waitUntilReady(addr) {
+        var iframe = document.createElement('iframe');
+        var timeout = setTimeout(function () {
+            // Clean up iframe
+            try {
+                iframe.parentElement.removeChild(iframe);
+            } catch (error) {
+                // do nothing, it is not that critical
+            }
+            // Do a new try
+            waitUntilReady(addr);
+            //location.assign(getPath(pageName)); // change location to parent
+        }, 1000);
+        iframe.onload = function () {
+            var scripts = iframe.contentDocument.scripts;
+            var hasValidScript = false;
+            var test = sw.getAdminPath();
+
+            for (var i = 0; i < scripts.length; i++) {
+                if (document.scripts[i].src.indexOf(test)) {
+                    hasValidScript = true;
+                    break;
+                }
+            }
+            //console.log('test:', hasValidScript);
+            if (hasValidScript) {
+                clearTimeout(timeout);
+                // Clean up iframe
+                iframe.parentElement.remove(iframe);
+                location.assign(addr); // change location to parent
+            }
+        };
+        iframe.src = addr + "?nocache=" + new Date().getTime();
+        document.body.appendChild(iframe);
     }
 
     function createItem(item) {
@@ -212,7 +249,7 @@
             'link': item.path,
             'path': path,
             'children': [],
-            'depth': path.split('/').length -1,
+            'depth': path.split('/').length - 1,
             'isSelected': isSelected
         }
     }
@@ -251,7 +288,7 @@
                     sw.storage.del(addr + 'index.html', function (status) {
                         if (status.isOK) {
                             console.log('successfully deleted page', addr);
-                            
+
                             var tmp = getPath(addr);
                             var arr = tmp.split('/');
                             while (arr.pop() === '') {
@@ -283,5 +320,5 @@
     for (var i = 0; i < locations.length; i++) {
         getNavigationNodes(locations[i], itemElement, headerElement, contentElement);
     }
-    
+
 })(StaticWeb);

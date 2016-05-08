@@ -116,17 +116,21 @@
             });
         });
     }
-    StaticWebDefinition.prototype.addResource = function (resourceName, data) {
+    StaticWebDefinition.prototype.addResource = function (resourceName, data, callback) {
         // TODO: queue requests that are done until we have a valid storage
         this.storage.set(resourceName, data, function (fileMeta, callStatus) {
             if (callStatus.isOK) {
-                alert('saved');
+                if (callback) {
+                    callback();
+                }else{
+                    alert('saved');
+                }
             } else {
                 alert('fail, error code: 1');
             }
         });
     }
-    StaticWebDefinition.prototype.addPage = function (pageName, templatePath) {
+    StaticWebDefinition.prototype.addPage = function (pageName, templatePath, callback) {
         var self = this;
         this.storage.get(templatePath, function (file, callStatus) {
             if (callStatus.isOK) {
@@ -134,7 +138,7 @@
                 // Disallowed chars regex
                 var regexp = /([^a-z0-9!{}<>/\;&#\:\ \=\\r\\n\\t\"\'\%\*\-\.\,\(\)\@])/gi;
                 data = data ? data.replace(regexp, '') : '';
-                self.addResource(pageName, data);
+                self.addResource(pageName, data, callback);
             } else {
                 alert('fail, error code: 2');
             }
