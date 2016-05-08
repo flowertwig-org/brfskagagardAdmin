@@ -16,7 +16,7 @@
 
             var image = mood.style.backgroundImage;
             var index = image.indexOf('/img/mood');
-            image = '.' + image.substring(index);
+            image = image.substring(index);
             image = image.substring(0, image.length - 1);
             mood.removeAttribute('data-mood-orginal');
             
