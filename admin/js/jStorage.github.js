@@ -126,9 +126,9 @@
         listRepos: function (callback) {
             var self = this;
 
-            addr = "https://api.github.com/user/repos/";
+            addr = "https://api.github.com/user/repos";
             githubRequest("GET", addr, self._config.token, false, function () {
-                console.log('GET', arguments);
+                console.log('listRepos', arguments);
                 debugger;
                 // if (arguments.length >= 2) {
                 //     var info = arguments[1];
