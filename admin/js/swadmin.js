@@ -98,6 +98,12 @@
                             if (callStatus.isOK) {
                                 self.writeCookie(self.cookieName, token);
 
+                                // We seem to have token i url, reload page without it.. (For security reasons)
+                                if (window.location.search.indexOf(token) >= 0 || window.location.search.indexOf('token') >= 0) {
+                                    // This will reload page without query.
+                                    window.location.search = '';
+                                }
+
                                 if (self.inAdminPath()) {
                                     self.showNavigation();
                                     self.removeLogin();
