@@ -306,6 +306,41 @@
     }
     StaticWebDefinition.prototype.getToken = function () {
         var token = this.readCookie(this.cookieName);
+        if (!token) {
+            var arr = window.location.search.split('&');
+            if (arr.length > 0){
+                var tmpToken = '',
+                    tmpState = '';
+                for (var i = 0; i< arr.length; i++) {
+                    var pair = arr[i].split('=');
+                    if (pair.length !== 2) {
+                        continue;
+                    }
+
+                    var key = pair[0];
+                    if (key.length > 1 && key[0] == '?') {
+                        key = key.substr(1);
+                    }
+                    var val = pair[1];
+
+                    switch (key) {
+                        case 'token':
+                            tmpToken = val;
+                            break;
+                        case 'state':
+                            tmpState = val;
+                            break;
+                    }
+                }
+
+                if (tmpToken && tmpState) {
+                    var state = this.getUserSetting('state');
+                    if (state === tmpState) {
+                        token = tmpToken;
+                    }
+                }
+            }
+        }
         return this.sanitizeToken(token);
     }
 
