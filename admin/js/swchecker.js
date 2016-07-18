@@ -59,7 +59,7 @@
 (function (staticWeb) {
     var cookieName = 'staticweb-token';
     // If we have cookie, we are signed in and show load admin.
-    var token = staticWeb.readCookie(cookieName);
+    var token = staticWeb.readCookie(cookieName) || window.location.search.indexOf('token') >= 0;
     if (token || staticWeb.inAdminPath()) {
         var path = staticWeb.getAdminPath();
         // Load admin script(s)
