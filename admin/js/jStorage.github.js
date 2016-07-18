@@ -123,6 +123,47 @@
                 }
             }
         },
+        listRepos: function (callback) {
+            var self = this;
+
+            addr = "https://api.github.com/user/repos/";
+            githubRequest("GET", addr, self._config.token, false, function () {
+                console.log('GET', arguments);
+                debugger;
+                // if (arguments.length >= 2) {
+                //     var info = arguments[1];
+                //     if ('length' in info) {
+                //         for (var i = 0; i < info.length; i++) {
+                //             self._shaCache[info[i].path] = info[i].sha;
+                //         }
+                //         callback(null, { 'isOK': false, 'msg': 'this is a directory', 'code': -2 });
+                //     }
+                //     else if (info.type == "file") {
+                //         var data = arguments[1].content;
+                        
+                //         if (data && data.indexOf('\n') !== -1){
+                //             // Fixing data format returned by github as atob doesn't know what todo with newlines.
+                //             data = data.replace(/\n/g, '');
+                //         }
+                        
+                //         self._shaCache[name] = info.sha;
+                //         callback(
+                //             {
+                //                 'name': info.path,
+                //                 'size': info.size,
+                //                 'mime-type': 'text/html',
+                //                 'modified': info['last-modified'],
+                //                 'data': atob(data)
+                //             },
+                //             { 'isOK': true, 'msg': '', 'code': 0 });
+                //     } else {
+                //         callback(null, { 'isOK': false, 'msg': 'This is not a valid file', 'code': -1 });
+                //     }
+                // } else {
+                //     callback(null, { 'isOK': false, 'msg': arguments[0].request.statusText, 'code': arguments[0].request.status });
+                // }
+            });
+        },
         get: function (name, callback) {
             var self = this;
 
