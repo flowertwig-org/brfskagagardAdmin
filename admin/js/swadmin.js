@@ -25,13 +25,13 @@
             this.loadAdminState(token);
         }
         else if (this.inAdminPath()) {
-             var button = document.getElementById('staticweb-login-link');
-             button.addEventListener('click', function (evt) {
+             var link = document.getElementById('staticweb-login-link');
+             link.addEventListener('click', function (evt) {
                  evt.preventDefault();
                  
                  var tmpState = 'state-' + new Date().getTime();
                  self.setSetting('sw.config.tokenState', tmpState);
-                 window.location.assign(btn.href.replace('stateKeyToVerifyToken', tmpState));
+                 window.location.assign(link.href.replace('stateKeyToVerifyToken', tmpState));
              });
         }
     }
