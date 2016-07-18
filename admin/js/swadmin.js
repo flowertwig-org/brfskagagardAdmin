@@ -23,17 +23,19 @@
         // Do we have a valid token?
         if (token) {
             this.loadAdminState(token);
-        } else if (this.inAdminPath()) {
-            var button = document.getElementById('staticweb-login-btn')
-            button.addEventListener('click', function () {
-                var input = document.getElementById('staticweb-login-token');
-                var token = self.sanitizeToken(input.value);
-                if (token) {
-                    self.loadAdminState(token);
-                } else {
-                    alert('Ogiltigt personligt åtkomsttoken.');
-                }
-            });
+        }
+        else if (this.inAdminPath()) {
+             var button = document.getElementById('staticweb-login-link')
+             button.addEventListener('click', function () {
+                 self.setSetting('sw.config.tokenState', 'state-' + new Date().getTime())
+        //         var input = document.getElementById('staticweb-login-token');
+        //         var token = self.sanitizeToken(input.value);
+        //         if (token) {
+        //             self.loadAdminState(token);
+        //         } else {
+        //             alert('Ogiltigt personligt åtkomsttoken.');
+        //         }
+             });
         }
     }
     
@@ -334,7 +336,7 @@
                 }
 
                 if (tmpToken && tmpState) {
-                    var state = this.getUserSetting('state');
+                    var state = this.getUserSetting('sw.config.tokenState');
                     if (state === tmpState) {
                         token = tmpToken;
                     }
