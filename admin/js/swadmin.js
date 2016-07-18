@@ -25,16 +25,13 @@
             this.loadAdminState(token);
         }
         else if (this.inAdminPath()) {
-             var button = document.getElementById('staticweb-login-link')
-             button.addEventListener('click', function () {
-                 self.setSetting('sw.config.tokenState', 'state-' + new Date().getTime())
-        //         var input = document.getElementById('staticweb-login-token');
-        //         var token = self.sanitizeToken(input.value);
-        //         if (token) {
-        //             self.loadAdminState(token);
-        //         } else {
-        //             alert('Ogiltigt personligt åtkomsttoken.');
-        //         }
+             var button = document.getElementById('staticweb-login-link');
+             button.addEventListener('click', function (evt) {
+                 evt.preventDefault();
+                 
+                 var tmpState = 'state-' + new Date().getTime();
+                 self.setSetting('sw.config.tokenState', tmpState);
+                 window.location.assign(btn.href.replace('stateKeyToVerifyToken', tmpState));
              });
         }
     }
