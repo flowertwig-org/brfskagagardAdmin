@@ -385,7 +385,9 @@
             console.log('github exists');
         },
         getTokenFromQuery: function () {
-            var arr = window.location.search.split('&');
+            // remove questionmark from querystring
+            var search = window.location.search.substr(1);
+            var arr = search.split('&');
             if (arr.length > 0) {
                 var tmpToken = '',
                     tmpState = '';
@@ -396,9 +398,6 @@
                     }
 
                     var key = pair[0];
-                    if (key.length > 1 && key[0] == '?') {
-                        key = key.substr(1);
-                    }
                     var val = pair[1];
 
                     switch (key) {

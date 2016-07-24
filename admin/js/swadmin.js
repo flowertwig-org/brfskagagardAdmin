@@ -12,7 +12,6 @@
         var self = this;
 
         this.config = {};
-        this.cookieName = 'staticweb-token';
         // all loaded components should store themself here.
         this.components = {};
         this.elements = {};
@@ -96,9 +95,6 @@
                         'token': token,
                         'callback': function (storage, callStatus) {
                             if (callStatus.isOK) {
-                                // jStorage will take care of storage of token
-                                //self.writeCookie(self.cookieName, token);
-
                                 if (self.inAdminPath()) {
                                     self.showNavigation();
                                     self.removeLogin();
@@ -107,7 +103,8 @@
                                 self.config.storage.isReady = true;
                             } else {
                                 alert('Ogiltigt personligt åtkomsttoken.');
-                                self.writeCookie(self.cookieName, '');
+                                // token from jStorage seems invalid, remove it and reload page.
+                                localStorage.removeItem('token');
                                 location.reload();
                             }
                         }
