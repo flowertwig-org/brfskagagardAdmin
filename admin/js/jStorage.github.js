@@ -129,39 +129,39 @@
             addr = "https://api.github.com/user/repos";
             githubRequest("GET", addr, self._config.token, false, function () {
                 console.log('listRepos', arguments);
-                debugger;
-                // if (arguments.length >= 2) {
-                //     var info = arguments[1];
-                //     if ('length' in info) {
-                //         for (var i = 0; i < info.length; i++) {
-                //             self._shaCache[info[i].path] = info[i].sha;
-                //         }
-                //         callback(null, { 'isOK': false, 'msg': 'this is a directory', 'code': -2 });
-                //     }
-                //     else if (info.type == "file") {
-                //         var data = arguments[1].content;
-                        
-                //         if (data && data.indexOf('\n') !== -1){
-                //             // Fixing data format returned by github as atob doesn't know what todo with newlines.
-                //             data = data.replace(/\n/g, '');
-                //         }
-                        
-                //         self._shaCache[name] = info.sha;
-                //         callback(
-                //             {
-                //                 'name': info.path,
-                //                 'size': info.size,
-                //                 'mime-type': 'text/html',
-                //                 'modified': info['last-modified'],
-                //                 'data': atob(data)
-                //             },
-                //             { 'isOK': true, 'msg': '', 'code': 0 });
-                //     } else {
-                //         callback(null, { 'isOK': false, 'msg': 'This is not a valid file', 'code': -1 });
-                //     }
-                // } else {
-                //     callback(null, { 'isOK': false, 'msg': arguments[0].request.statusText, 'code': arguments[0].request.status });
-                // }
+                if (arguments.length >= 2) {
+                    var repos = arguments[1];
+                    callback(repos);
+                    //     if ('length' in info) {
+                    //         for (var i = 0; i < info.length; i++) {
+                    //             self._shaCache[info[i].path] = info[i].sha;
+                    //         }
+                    //         callback(null, { 'isOK': false, 'msg': 'this is a directory', 'code': -2 });
+                    //     }
+                    //     else if (info.type == "file") {
+                    //         var data = arguments[1].content;
+
+                    //         if (data && data.indexOf('\n') !== -1){
+                    //             // Fixing data format returned by github as atob doesn't know what todo with newlines.
+                    //             data = data.replace(/\n/g, '');
+                    //         }
+
+                    //         self._shaCache[name] = info.sha;
+                    //         callback(
+                    //             {
+                    //                 'name': info.path,
+                    //                 'size': info.size,
+                    //                 'mime-type': 'text/html',
+                    //                 'modified': info['last-modified'],
+                    //                 'data': atob(data)
+                    //             },
+                    //             { 'isOK': true, 'msg': '', 'code': 0 });
+                    //     } else {
+                    //         callback(null, { 'isOK': false, 'msg': 'This is not a valid file', 'code': -1 });
+                    //     }
+                    // } else {
+                    //     callback(null, { 'isOK': false, 'msg': arguments[0].request.statusText, 'code': arguments[0].request.status });
+                }
             });
         },
         get: function (name, callback) {
@@ -190,12 +190,12 @@
                     }
                     else if (info.type == "file") {
                         var data = arguments[1].content;
-                        
-                        if (data && data.indexOf('\n') !== -1){
+
+                        if (data && data.indexOf('\n') !== -1) {
                             // Fixing data format returned by github as atob doesn't know what todo with newlines.
                             data = data.replace(/\n/g, '');
                         }
-                        
+
                         self._shaCache[name] = info.sha;
                         callback(
                             {
@@ -384,83 +384,90 @@
         exists: function (name, callback) {
             console.log('github exists');
         },
+        getTokenFromQuery: function () {
+            var arr = window.location.search.split('&');
+            if (arr.length > 0) {
+                var tmpToken = '',
+                    tmpState = '';
+                for (var i = 0; i < arr.length; i++) {
+                    var pair = arr[i].split('=');
+                    if (pair.length !== 2) {
+                        continue;
+                    }
+
+                    var key = pair[0];
+                    if (key.length > 1 && key[0] == '?') {
+                        key = key.substr(1);
+                    }
+                    var val = pair[1];
+
+                    switch (key) {
+                        case 'token':
+                            tmpToken = val;
+                            break;
+                        case 'state':
+                            tmpState = val;
+                            break;
+                    }
+                }
+
+                // Do we have token and tokenstate?
+                if (tmpToken && tmpState) {
+                    var state = localStorage.getItem('jStorage.github.tokenState');
+                    if (state === tmpState) {
+                        // Token state are valid, set/change token.
+                        return tmpToken;
+                    }
+                }
+            }
+            return false;
+        },
         ensureAuth: function (wrapper, config) {
             // TODO: we require token today, allow for oauth fetching of token here
 
 
-            //var scope = 'public_repo';
-            //if (config.access && config.access == "private") {
-            //    scope = 'repo';
-            //}
+            // Because of security reasons, if we have valid token in url, force remove...
+            var token = this.getTokenFromQuery();
+            if (!!token) {
+                // store token for later use
+                window.localStorage.setItem('token', token);
 
-            //// https://dev.jstorage.flowertwig.org/tests/github.html
-            //var redirectUrl = window.location.protocol + '//' + window.location.host + window.location.pathname;
+                // Make sure we don't have token in url (as if user copies the url and sends it to friend/or someone else they will be logged in as our user)
+                var search = '&' + window.location.search.substr(1); // replace question mark with '&' char
+                search = search.replace("&token=" + token, '');
+                search = search.replace("&state=" + localStorage.getItem('jStorage.github.tokenState'));
+                if (search.length === 0) {
+                    window.location.search = '';
+                } else {
+                    window.location.search = '?' + search.substr(1); // removes first '&' char
+                }
+            }
 
-            //var sections = window.location.search.split("&");
-            //for (var i = 0; i < sections.length; i++) {
-            //    var pair = sections[i].split('=');
-            //    if (pair.length == 2) {
-            //        var key = pair[0];
-            //        var value = pair[1];
+            // If we have a token provided in config we will use that and can there for ignore the rest of below..
+            if (!!this._config.token) {
+                return;
+            }
 
-            //        key = key.replace(/^\?/, '');
+            var token = window.localStorage.getItem('token');
+            if (!!token) {
+                this._config.token = token;
+                return;
+            }
 
-            //        console.log('key: ' + key);
-            //        console.log('value: ' + value);
-
-            //        switch (key) {
-            //            case 'state':
-            //                _state = value;
-            //                break;
-            //            case 'code':
-            //                _code = value;
-            //                writeCookie('jStorage-github-code', value, 1);
-            //                break;
-            //        }
-            //    }
-            //}
-
-            //var step = readCookie('jStorage-github-step');
-            //switch (step) {
-            //    default:
-            //        writeCookie('jStorage-github-step', 'step2');
-            //        writeCookie('jStorage-github-state', this._state, 1);
-
-            //        window.location.assign('https://github.com/login/oauth/authorize?client_id=' + config.clientId + '&redirect_uri=' + redirectUrl + '&scope=' + scope + '&state=' + this._state);
-            //        break;
-            //    case 'step2':
-            //        // TODO: Validate so state in cookie matches the state in query param.
-            //        var code = readCookie('jStorage-github-code');
-
-            //        var addr = 'https://github.com/login/oauth/access_token';
-            //        //var addr = "https://githubservice.jstorage.flowertwig.org/api/Values";
-            //        var data = 'client_id=' + config.clientId + '&client_secret=' + config.clientSecret + '&code=' + code + '&redirect_uri=' + redirectUrl;
-
-            //        //var s = document.createElement('script'),
-            //        //    h = document.getElementsByTagName('head')[0];
-            //        //s.src = addr;
-            //        //h.appendChild(s);
-
-            //        //document.getElementsByName('client_id')[0].value = config.clientId;
-            //        //document.getElementsByName('client_secret')[0].value = config.clientSecret;
-            //        //document.getElementsByName('code')[0].value = code;
-            //        //document.getElementsByName('redirect_uri')[0].value = redirectUrl;
-
-            //        githubRequest('POST', addr, false, data, function() {
-            //            console.log(arguments);
-            //        });
-
-            //        //request('https://github.com/login/oauth/access_token?client_id=' + config.clientId + '&client_secret=' + config.clientSecret + '&code=' + code + '&redirect_uri=' + redirectUrl);
-            //        //https://github.com/login/oauth/access_token?client_id=df3a0f28472a4ad20f39&client_secret=f3029af7a93f39319b580dea5afbce693bb56876&code=d58c49123ecdaa0ba73c&redirect_uri=https://dev.jstorage.flowertwig.org/tests/github.html
-            //            //access_token=9c32c17fe2225a36cc04a0f8975b8cd64a4210e0&scope=public_repo&token_type=bearer
-            //        //writeCookie('jStorage-github-step', 'step3');
-            //        break;
-            //    case 'step3':
-            //        //eraseCookie('jStorage-github-step');
-            //        //eraseCookie('jStorage-github-state');
-            //        //eraseCookie('jStorage-github-code');
-            //        break;
-            //}
+            var tokenService = this._config.tokenService;
+            if (!!tokenService) {
+                var startChar = '?';
+                if (tokenService.indexOf('?')) {
+                    startChar = '&';
+                }
+                var tokenState = 'ts' + new Date().getTime();
+                localStorage.setItem('jStorage.github.tokenState', tokenState);
+                // append a unique token state that we can later verify against.
+                tokenService = tokenService + startChar + 'state=' + tokenState;
+                window.location.assign(tokenService);
+            } else {
+                // TODO: no token service specified, what todo?
+            }
         }
     };
 })(jStorage);

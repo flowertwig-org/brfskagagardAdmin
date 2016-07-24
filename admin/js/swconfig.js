@@ -2,7 +2,8 @@
 (function (sw) {
     sw.config.storage = {
         'type': 'github',
-        'repo': 'flowertwig-org/brfskagagardAdmin'
+        'repo': 'flowertwig-org/brfskagagardAdmin',
+        'tokenService': 'https://brfskagagard-inloggning.azurewebsites.net?appName=member-test'
     }
     sw.config.user = {
         'timeout': 60 * 60 * 24 * 7 // Time settings is stored on user device (currently: 7 days)

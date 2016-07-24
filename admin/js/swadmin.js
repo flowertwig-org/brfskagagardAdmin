@@ -29,8 +29,8 @@
              link.addEventListener('click', function (evt) {
                  evt.preventDefault();
                  
-                 var tmpState = 'state-' + new Date().getTime();
-                 self.setSetting('sw.config.tokenState', tmpState);
+                 var tmpState = 'staticweb-ts-' + new Date().getTime();
+                 window.localStorage.setItem('jStorage.github.tokenState', tmpState);
                  window.location.assign(link.href.replace('stateKeyToVerifyToken', tmpState));
              });
         }
@@ -96,13 +96,8 @@
                         'token': token,
                         'callback': function (storage, callStatus) {
                             if (callStatus.isOK) {
-                                self.writeCookie(self.cookieName, token);
-
-                                // We seem to have token i url, reload page without it.. (For security reasons)
-                                if (window.location.search.indexOf(token) >= 0 || window.location.search.indexOf('token') >= 0) {
-                                    // This will reload page without query.
-                                    window.location.search = '';
-                                }
+                                // jStorage will take care of storage of token
+                                //self.writeCookie(self.cookieName, token);
 
                                 if (self.inAdminPath()) {
                                     self.showNavigation();
@@ -310,42 +305,9 @@
         return data.replace(/([^a-z0-9!{}<>/\;&#\:\ \=\\r\\n\\t\"\'\%\*\-\.\,\(\)\@])/gi, toHtmlCode);
     }
     StaticWebDefinition.prototype.getToken = function () {
-        var token = this.readCookie(this.cookieName);
-        if (!token) {
-            var arr = window.location.search.split('&');
-            if (arr.length > 0){
-                var tmpToken = '',
-                    tmpState = '';
-                for (var i = 0; i< arr.length; i++) {
-                    var pair = arr[i].split('=');
-                    if (pair.length !== 2) {
-                        continue;
-                    }
-
-                    var key = pair[0];
-                    if (key.length > 1 && key[0] == '?') {
-                        key = key.substr(1);
-                    }
-                    var val = pair[1];
-
-                    switch (key) {
-                        case 'token':
-                            tmpToken = val;
-                            break;
-                        case 'state':
-                            tmpState = val;
-                            break;
-                    }
-                }
-
-                if (tmpToken && tmpState) {
-                    var state = this.getUserSetting('sw.config.tokenState');
-                    if (state === tmpState) {
-                        token = tmpToken;
-                    }
-                }
-            }
-        }
+        // We are hardcoded to support 'dropbox' and 'github' here as we us the 'token' key used by them.
+        // TODO: fix this so it has pure cross provider support.
+        var token = localStorage.getItem('token');
         return this.sanitizeToken(token);
     }
 
