@@ -98,17 +98,7 @@
                         // TODO: check for permissions
                         self.loadAdminState(callStatus.isOK);
                     };
-                    self.storage = jStorage({
-                        'name': self.config.storage.type, // General
-                        'repo': self.config.storage.repo, // GitHub
-                        'tokenService': self.config.storage.tokenService, // GitHub (Optional, can use token instead)
-                        'token': self.config.storage.token, // GitHub (Optional, can use tokenService instead)
-                        'appKey': self.config.storage.appKey, // Dropbox
-                        'callback': function (storage, callStatus) {
-                            // TODO: check for permissions
-                            self.loadAdminState(callStatus.isOK);
-                        }
-                    });
+                    self.storage = jStorage(jStorageConf);
                 });
             });
         });
