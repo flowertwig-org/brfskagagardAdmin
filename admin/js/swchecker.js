@@ -40,9 +40,9 @@
             return adminPath;
         },
         includeScript: function (addr) {
-            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-            ga.src = addr;
-            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+            var e = document.createElement('script'); e.type = 'text/javascript'; e.async = true;
+            e.src = addr;
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(e, s);
         }
     }
 
@@ -51,7 +51,8 @@
 })(window);
 
 (function (staticWeb) {
-    if (staticWeb.hasLoggedInInfo() || staticWeb.inAdminPath()) {
+    var hasLoginLink = !!document.getElementById('staticweb-login-link');
+    if (hasLoginLink || staticWeb.hasLoggedInInfo() || staticWeb.inAdminPath()) {
         var path = staticWeb.getAdminPath();
         // Load admin script(s)
         staticWeb.includeScript(path + 'js/swadmin.js');
