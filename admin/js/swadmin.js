@@ -97,11 +97,23 @@
                     jStorageConf.callback = function (storage, callStatus) {
                         // TODO: check for permissions
                         self.loadAdminState(callStatus.isOK);
+                        self.notifyComponentsOfStorageReady();
                     };
                     self.storage = jStorage(jStorageConf);
                 });
             });
         });
+    }
+    StaticWebDefinition.prototype.notifyComponentsOfStorageReady = function () {
+        var self = this;
+        var list = self.components;
+        for (var compName in list) {
+            var notifyOnStorageReadyCall = list[compName]["onStorageReady"];
+            if (!!notifyOnStorageReadyCall) {
+                // calling onStorageReady method of components that supports it...
+                notifyOnStorageReadyCall();
+            }
+        }
     }
     StaticWebDefinition.prototype.loadAdminState = function (loggedIn) {
         var self = this;
