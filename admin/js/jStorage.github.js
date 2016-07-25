@@ -378,9 +378,13 @@
                 // Make sure we don't have token in url (as if user copies the url and sends it to friend/or someone else they will be logged in as our user)
                 var search = '&' + window.location.search.substr(1); // replace question mark with '&' char
                 search = search.replace("&token=" + token, '');
-                search = search.replace("&state=" + localStorage.getItem('jStorage.github.tokenState'));
+                search = search.replace("&state=" + localStorage.getItem('jStorage.github.tokenState'), '');
+
+                // make sure we remove the temporary tokenState from storage
+                window.localStorage.removeItem('jStorage.github.tokenState');
                 if (search.length === 0) {
-                    window.location.search = '';
+                    // we have removed everything in querystring, reset href without querystring part, we are doing it this way instead of setting 'search' property because setting 'search' property will result in '?' in the end of url.
+                    window.location.href = location.href.replace(location.search, '');
                 } else {
                     window.location.search = '?' + search.substr(1); // removes first '&' char
                 }
