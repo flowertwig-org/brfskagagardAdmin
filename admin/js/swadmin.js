@@ -24,7 +24,7 @@
             // var token = this.getToken();
             // this.loadAdminState(token);
         }
-        else if (this.inAdminPath()) {
+        else {
             var link = document.getElementById('staticweb-login-link');
             link.addEventListener('click', function (evt) {
                 evt.preventDefault();
