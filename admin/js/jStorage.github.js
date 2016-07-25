@@ -117,7 +117,7 @@
         get: function (name, callback, extendedOptions) {
             var self = this;
 
-            var repo = getRepo(this._config.repo, extendedOptions);
+            var repo = this.getRepo(this._config.repo, extendedOptions);
 
             // Remove begining slash
             if (name && name.indexOf('/') == 0) {
