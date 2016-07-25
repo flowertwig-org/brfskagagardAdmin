@@ -12,14 +12,14 @@
         init: function () {
             var self = this;
         },
-        onStorageReady: function () {
+        onStorageReady: function (storage) {
             // This method will be called by swadmin.js when storage is ready to be used.
-            staticWeb.storage.listStorages(function (repos) {
+            storage.listStorages(function (repos) {
                 for (var repoIndex = 0; repoIndex < repos.length; repoIndex++) {
                     var currentRepo = repos[repoIndex];
                     var isApartmentRepo = currentRepo.name.indexOf('brfskagagard-lgh');
                     if (isApartmentRepo) {
-                        staticWeb.storage.get(
+                        storage.get(
                             'swconfig.json',
                             function (info, status) {
                                 if (status.isOK) {
