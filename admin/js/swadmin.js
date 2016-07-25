@@ -18,32 +18,33 @@
 
         this.storage = false;
 
-        var token = this.getToken();
         // Do we have a valid token?
-        if (token) {
-            this.loadAdminState(token);
+        if (this.hasLoggedInInfo()) {
+            this.loadLoggedInState();
+            // var token = this.getToken();
+            // this.loadAdminState(token);
         }
         else if (this.inAdminPath()) {
-             var link = document.getElementById('staticweb-login-link');
-             link.addEventListener('click', function (evt) {
-                 evt.preventDefault();
-                 
-                 var tmpState = 'staticweb-ts-' + new Date().getTime();
-                 window.localStorage.setItem('jStorage.github.tokenState', tmpState);
-                 window.location.assign(link.href.replace('stateKeyToVerifyToken', tmpState));
-             });
+            var link = document.getElementById('staticweb-login-link');
+            link.addEventListener('click', function (evt) {
+                evt.preventDefault();
+
+                var tmpState = 'staticweb-ts-' + new Date().getTime();
+                window.localStorage.setItem('jStorage.github.tokenState', tmpState);
+                window.location.assign(link.href.replace('stateKeyToVerifyToken', tmpState));
+            });
         }
     }
-    
-    StaticWebDefinition.prototype.setSetting = function(key, value) {
+
+    StaticWebDefinition.prototype.setSetting = function (key, value) {
         localStorage.setItem(key, value);
     }
-    StaticWebDefinition.prototype.getUserSetting = function(key) {
+    StaticWebDefinition.prototype.getUserSetting = function (key) {
         var value = localStorage.getItem(key);
         return value;
     }
-    
-    StaticWebDefinition.prototype.getSetting = function(key) {
+
+    StaticWebDefinition.prototype.getSetting = function (key) {
         var obj = this.getUserSetting(key);
         if (!obj) {
             var keys = key.split('.').reverse();
@@ -52,7 +53,7 @@
         return obj;
     }
 
-    StaticWebDefinition.prototype.getSettingFromObject = function(keys, obj) {
+    StaticWebDefinition.prototype.getSettingFromObject = function (keys, obj) {
         var key = keys.pop();
 
         if (key === "sw") {
@@ -77,41 +78,60 @@
         s.appendChild(link, s);
     }
 
-    StaticWebDefinition.prototype.loadAdminState = function (token) {
+    StaticWebDefinition.prototype.loadLoggedInState = function () {
         var self = this;
         var adminPath = this.getAdminPath();
+
+        // TODO: check for permissions
         this.loadComponents();
 
-        this.includeStyle(adminPath + 'css/swadmin.css');
+        // this.includeStyle(adminPath + 'css/swadmin.css');
         this.includeScript(adminPath + 'js/jStorage.js');
         this.includeScript(adminPath + 'js/swconfig.js');
         self.ensureLoaded('storage', self.config, function () {
             self.ensureLoaded('jStorage', window, function () {
                 self.includeScript(adminPath + 'js/jStorage.' + self.config.storage.type + '.js');
                 self.ensureLoaded(self.config.storage.type, jStorage.providers, function () {
+                    var jStorageConf = self.config.storage;
+                    jStorageConf.name = jStorageConf.type;
+                    jStorageConf.callback = function (storage, callStatus) {
+                        // TODO: check for permissions
+                        self.loadAdminState(callStatus.isOK);
+                    };
                     self.storage = jStorage({
-                        'name': self.config.storage.type,
-                        'repo': self.config.storage.repo,
-                        'token': token,
+                        'name': self.config.storage.type, // General
+                        'repo': self.config.storage.repo, // GitHub
+                        'tokenService': self.config.storage.tokenService, // GitHub (Optional, can use token instead)
+                        'token': self.config.storage.token, // GitHub (Optional, can use tokenService instead)
+                        'appKey': self.config.storage.appKey, // Dropbox
                         'callback': function (storage, callStatus) {
-                            if (callStatus.isOK) {
-                                if (self.inAdminPath()) {
-                                    self.showNavigation();
-                                    self.removeLogin();
-                                }
-                                self.loadOnPage();
-                                self.config.storage.isReady = true;
-                            } else {
-                                alert('Ogiltigt personligt åtkomsttoken.');
-                                // token from jStorage seems invalid, remove it and reload page.
-                                localStorage.removeItem('token');
-                                location.reload();
-                            }
+                            // TODO: check for permissions
+                            self.loadAdminState(callStatus.isOK);
                         }
                     });
                 });
             });
         });
+    }
+    StaticWebDefinition.prototype.loadAdminState = function (loggedIn) {
+        var self = this;
+        var adminPath = this.getAdminPath();
+        // this.loadComponents();
+
+        if (loggedIn) {
+            this.includeStyle(adminPath + 'css/swadmin.css');
+            if (self.inAdminPath()) {
+                self.showNavigation();
+                self.removeLogin();
+            }
+            self.loadOnPage();
+            self.config.storage.isReady = true;
+        } else {
+            alert('Ogiltigt personligt åtkomsttoken.');
+            // token from jStorage seems invalid, remove it and reload page.
+            localStorage.removeItem('token');
+            location.reload();
+        }
     }
     StaticWebDefinition.prototype.addResource = function (resourceName, data, callback) {
         // TODO: queue requests that are done until we have a valid storage
@@ -119,7 +139,7 @@
             if (callStatus.isOK) {
                 if (callback) {
                     callback();
-                }else{
+                } else {
                     alert('saved');
                 }
             } else {
