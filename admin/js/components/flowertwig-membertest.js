@@ -51,6 +51,9 @@
                             },
                             { 'repo': currentRepo.path }
                         );
+                        
+                        // We have a matching apartment, no need to look longer.
+                        break;
                     }
                 }
             });
