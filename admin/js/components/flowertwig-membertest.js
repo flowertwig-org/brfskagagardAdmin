@@ -17,7 +17,8 @@
             storage.listStorages(function (repos) {
                 for (var repoIndex = 0; repoIndex < repos.length; repoIndex++) {
                     var currentRepo = repos[repoIndex];
-                    var isApartmentRepo = currentRepo.name.indexOf('brfskagagard-lgh');
+                    // in our test the repo name needs to start with 'brfskagagard-lgh'
+                    var isApartmentRepo = currentRepo.name.indexOf('brfskagagard-lgh') === 0;
                     if (isApartmentRepo) {
                         storage.get(
                             'swconfig.json',
