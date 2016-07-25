@@ -1,29 +1,4 @@
 (function (jStorage, undefined) {
-    function writeCookie(name, value, days) {
-        if (days) {
-            var date = new Date();
-            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-            var expires = "; expires=" + date.toGMTString();
-        }
-        else var expires = "";
-        document.cookie = name + "=" + value + expires + "; path=/";
-    }
-
-    function readCookie(name) {
-        var nameEQ = name + "=";
-        var ca = document.cookie.split(';');
-        for (var i = 0; i < ca.length; i++) {
-            var c = ca[i];
-            while (c.charAt(0) == ' ') c = c.substring(1, c.length);
-            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
-        }
-        return null;
-    }
-
-    function eraseCookie(name) {
-        writeCookie(name, "", -1);
-    }
-
     function githubRequest(method, address, token, data, callback) {
         var xmlhttp;
         if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
@@ -58,12 +33,8 @@
             }
         };
 
-
-        //xmlhttp.setRequestHeader('Accept', 'application/vnd.github.raw+json');
         xmlhttp.setRequestHeader('Accept', 'application/json;charset=UTF-8');
         xmlhttp.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-        //xmlhttp.setRequestHeader("Access-Control-Allow-Origin", window.location.protocol + '//' + window.location.host);
-        //xmlhttp.setRequestHeader('Content-Type', 'application/xml');
         if (token) {
             xmlhttp.setRequestHeader('Authorization', 'token ' + token);
         }
@@ -71,13 +42,9 @@
         data ? xmlhttp.send(JSON.stringify(data)) : xmlhttp.send();
     }
 
-
-
     jStorage.providers.github = {
         init: function (wrapper, config) {
             var self = this;
-
-            console.log('github init');
 
             this._config = config;
             this._hasCallback = config && typeof (config.callback) === "function";
@@ -123,44 +90,27 @@
                 }
             }
         },
-        listRepos: function (callback) {
+        listStorages: function (callback) {
             var self = this;
 
             addr = "https://api.github.com/user/repos";
             githubRequest("GET", addr, self._config.token, false, function () {
-                console.log('listRepos', arguments);
                 if (arguments.length >= 2) {
                     var repos = arguments[1];
-                    callback(repos);
-                    //     if ('length' in info) {
-                    //         for (var i = 0; i < info.length; i++) {
-                    //             self._shaCache[info[i].path] = info[i].sha;
-                    //         }
-                    //         callback(null, { 'isOK': false, 'msg': 'this is a directory', 'code': -2 });
-                    //     }
-                    //     else if (info.type == "file") {
-                    //         var data = arguments[1].content;
 
-                    //         if (data && data.indexOf('\n') !== -1){
-                    //             // Fixing data format returned by github as atob doesn't know what todo with newlines.
-                    //             data = data.replace(/\n/g, '');
-                    //         }
+                    var storages = [];
+                    for (var i = 0; i < repos.length; i++) {
+                        var currentRepo = repos[i];
+                        storages.push({
+                            'name': currentRepo['name'],
+                            'path': currentRepo['full_name']
+                        })
+                    }
 
-                    //         self._shaCache[name] = info.sha;
-                    //         callback(
-                    //             {
-                    //                 'name': info.path,
-                    //                 'size': info.size,
-                    //                 'mime-type': 'text/html',
-                    //                 'modified': info['last-modified'],
-                    //                 'data': atob(data)
-                    //             },
-                    //             { 'isOK': true, 'msg': '', 'code': 0 });
-                    //     } else {
-                    //         callback(null, { 'isOK': false, 'msg': 'This is not a valid file', 'code': -1 });
-                    //     }
-                    // } else {
-                    //     callback(null, { 'isOK': false, 'msg': arguments[0].request.statusText, 'code': arguments[0].request.status });
+                    callback(storages);
+                }
+                else {
+                    callback([]);
                 }
             });
         },
@@ -179,7 +129,6 @@
 
             addr = "https://api.github.com/repos/" + this._config.repo + "/contents/" + name;
             githubRequest("GET", addr, self._config.token, false, function () {
-                console.log('GET', arguments);
                 if (arguments.length >= 2) {
                     var info = arguments[1];
                     if ('length' in info) {
@@ -271,7 +220,7 @@
             //if (name && name[name.length - 1] == '/') {
             //    name = name.substring(0, name.length - 1);
             //}
-            console.log('github move');
+            //console.log('github move');
         },
         del: function (name, callback) {
             var self = this;
@@ -285,8 +234,6 @@
             if (name && name[name.length - 1] == '/') {
                 name = name.substring(0, name.length - 1);
             }
-
-            console.log('del', name);
 
             // update content of file
             addr = "https://api.github.com/repos/" + self._config.repo + "/contents/" + name;
@@ -333,8 +280,6 @@
             });
         },
         list: function (name, callback) {
-            console.log('github list');
-
             // Remove begining slash
             if (name && name.indexOf('/') == 0) {
                 name = name.substring(1);
@@ -382,7 +327,7 @@
             });
         },
         exists: function (name, callback) {
-            console.log('github exists');
+            //console.log('github exists');
         },
         getTokenFromQuery: function () {
             // remove questionmark from querystring
@@ -422,8 +367,7 @@
             return false;
         },
         ensureAuth: function (wrapper, config) {
-            // TODO: we require token today, allow for oauth fetching of token here
-
+            // we require token today, allow for oauth fetching of token here
 
             // Because of security reasons, if we have valid token in url, force remove...
             var token = this.getTokenFromQuery();
