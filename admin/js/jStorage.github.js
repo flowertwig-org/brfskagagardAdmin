@@ -114,8 +114,10 @@
                 }
             });
         },
-        get: function (name, callback) {
+        get: function (name, callback, extendedOptions) {
             var self = this;
+
+            var repo = getRepo(this._config.repo, extendedOptions);
 
             // Remove begining slash
             if (name && name.indexOf('/') == 0) {
@@ -127,7 +129,7 @@
                 name = name.substring(0, name.length - 1);
             }
 
-            addr = "https://api.github.com/repos/" + this._config.repo + "/contents/" + name;
+            addr = "https://api.github.com/repos/" + repo + "/contents/" + name;
             githubRequest("GET", addr, self._config.token, false, function () {
                 if (arguments.length >= 2) {
                     var info = arguments[1];
@@ -415,6 +417,17 @@
             } else {
                 // TODO: no token service specified, what todo?
             }
+        },
+        getRepo: function(repo, extendedOptions) {
+            var repo = this._config.repo;
+            var hasExtendedOptions = !!extendedOptions;
+            if (hasExtendedOptions) {
+                var tmpRepo = extendedOptions['repo'];
+                if (!!tmpRepo)  {
+                    repo = tmpRepo;
+                }
+            }
+            return repo;
         }
     };
 })(jStorage);
