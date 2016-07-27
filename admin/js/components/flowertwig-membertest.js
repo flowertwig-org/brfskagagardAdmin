@@ -12,7 +12,7 @@
         init: function () {
             var self = this;
         },
-        getApartmentRepo: function (callback) {
+        getApartmentRepo: function (storage, callback) {
             var apartmentRepo = localStorage.getItem('brfskagard-member-apartment-repo');
             if (!!apartmentRepo) {
                 callback(apartmentRepo);
@@ -58,7 +58,7 @@
         onStorageReady: function (storage) {
             var self = this;
             // This method will be called by swadmin.js when storage is ready to be used.
-            this.getApartmentRepo(function (repoPath) {
+            this.getApartmentRepo(storage, function (repoPath) {
                 // Check if we have a valid repo path
                 if (!!repoPath) {
                     storage.get(
