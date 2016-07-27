@@ -103,7 +103,12 @@
                         var currentRepo = repos[i];
                         storages.push({
                             'name': currentRepo['name'],
-                            'path': currentRepo['full_name']
+                            'path': currentRepo['full_name'],
+                            'permissions': {
+                                'admin': currentRepo.permissions.admin,
+                                'write': currentRepo.permissions.push,
+                                'read': true /* As we could get it, we have access (atleast it is the case in GitHub) */
+                            }
                         })
                     }
 
