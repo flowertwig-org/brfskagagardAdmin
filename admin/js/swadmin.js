@@ -108,11 +108,15 @@
         var self = this;
         var list = self.components;
         for (var compName in list) {
-            var notifyOnStorageReadyCall = list[compName]["onStorageReady"];
-            if (!!notifyOnStorageReadyCall) {
-                // calling onStorageReady method of components that supports it...
-                notifyOnStorageReadyCall(storage);
+            var component = list[compName];
+            if ('onStorageReady' in component) {
+                component.onStorageReady(storage);
             }
+            // var notifyOnStorageReadyCall = list[compName]["onStorageReady"];
+            // if (!!notifyOnStorageReadyCall) {
+            //     // calling onStorageReady method of components that supports it...
+            //     notifyOnStorageReadyCall(storage);
+            // }
         }
     }
     StaticWebDefinition.prototype.loadAdminState = function (loggedIn) {
