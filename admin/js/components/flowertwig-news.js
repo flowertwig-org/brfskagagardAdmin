@@ -9,22 +9,13 @@
         return this.init();
     }
     News.prototype = {
-        save: function (editor) {
-            if (editor && editor.startContent) {
-                var resourceName = location.pathname.substring(1);
-                if (!resourceName || resourceName[resourceName.length - 1] == '/') {
-                    resourceName += 'index.html';
-                }
-
-                var container = editor.bodyElement;
-                var content = container.innerHTML;
-
-                staticWeb.updatePage(container.id, container.tagName, resourceName, content);
+        onStorageReady: function (storage, permissions) {
+            var self = this;
+            if (!staticWeb.permissions.check && permissions.indexOf('admin') > 0) {
+                self.createInterface();
             }
         },
-        init: function () {
-            var self = this;
-
+        createInterface: function () {
             staticWeb.includeScript("//tinymce.cachefly.net/4.3/tinymce.min.js");
             staticWeb.ensureLoaded('tinymce', window, function () {
                 var elements = staticWeb.elements['flowertwig-news'];
@@ -119,6 +110,22 @@
                     });
                 }
             });
+        },
+        save: function (editor) {
+            if (editor && editor.startContent) {
+                var resourceName = location.pathname.substring(1);
+                if (!resourceName || resourceName[resourceName.length - 1] == '/') {
+                    resourceName += 'index.html';
+                }
+
+                var container = editor.bodyElement;
+                var content = container.innerHTML;
+
+                staticWeb.updatePage(container.id, container.tagName, resourceName, content);
+            }
+        },
+        init: function () {
+            var self = this;
         }
     }
     staticWeb.components.flowertwigNews = new News();

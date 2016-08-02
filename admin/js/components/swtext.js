@@ -9,22 +9,7 @@
         return this.init();
     }
     Text.prototype = {
-        save: function (editor) {
-            if (editor && editor.startContent) {
-                var resourceName = location.pathname.substring(1);
-                if (!resourceName || resourceName[resourceName.length - 1] == '/') {
-                    resourceName += 'index.html';
-                }
-
-                var container = editor.bodyElement;
-                var content = container.innerHTML;
-
-                staticWeb.updatePage(container.id, container.tagName, resourceName, content);
-            }
-        },
-        init: function () {
-            var self = this;
-
+        createInterface: function () {
             staticWeb.includeScript("//cdn.tinymce.com/4/tinymce.min.js");
             staticWeb.ensureLoaded('tinymce', window, function () {
                 var elements = staticWeb.elements['swtext'];
@@ -42,6 +27,29 @@
                     });
                 }
             });
+        },
+        onStorageReady: function (storage, permissions) {
+            var self = this;
+            if (!staticWeb.permissions.check && permissions.indexOf('admin') > 0) {
+                self.createInterface();
+            }
+        },
+        
+        save: function (editor) {
+            if (editor && editor.startContent) {
+                var resourceName = location.pathname.substring(1);
+                if (!resourceName || resourceName[resourceName.length - 1] == '/') {
+                    resourceName += 'index.html';
+                }
+
+                var container = editor.bodyElement;
+                var content = container.innerHTML;
+
+                staticWeb.updatePage(container.id, container.tagName, resourceName, content);
+            }
+        },
+        init: function () {
+            var self = this;
         }
     }
     staticWeb.components.swText = new Text();

@@ -8,62 +8,13 @@
         return this.init();
     }
     MoodImage.prototype = {
-        save: function (container, mood) {
-            var resourceName = location.pathname.substring(1);
-            if (!resourceName || resourceName[resourceName.length - 1] == '/') {
-                resourceName += 'index.html';
-            }
-
-            var image = mood.style.backgroundImage;
-            var index = image.indexOf('/img/mood');
-            image = image.substring(index);
-            image = image.substring(0, image.length - 1);
-            mood.removeAttribute('data-mood-orginal');
-            
-            var content = mood.outerHTML;
-            content = content.replace(mood.style.backgroundImage, "url('" + image + "')");
-            
-            staticWeb.updatePage(container.id, container.tagName, resourceName, content);
-        },
-        listImages: function (container) {
-            container.style.display = 'inline-block';
-            container.innerHTML = "Loading images ...";
-
-            staticWeb.storage.list('/img/mood/', function (info, status) {
-                container.style.backgroundColor = '#fff';
-                container.style.border = 'solid 1px lightgrey';
-                container.style.color = '#000';
-
-                if (status.isOK) {
-                    var list = arguments[0];
-                    var elements = [];
-                    for (var i = 0; i < list.length; i++) {
-                        list[i]
-                        elements.push('<img src="' + list[i].path + '" width="200" title="' + list[i].name + '" style="cursor:pointer" />');
-                    }
-                    container.innerHTML = elements.join('');
-                }
-            });
-        },
-        changeImage: function (event, container) {
-            var index = 0;
-            if (!container.getAttribute('data-mood-orginal')) {
-                var orgImage = container.style.backgroundImage;
-                index = orgImage.indexOf('/img/mood');
-                orgImage = orgImage.substring(index);
-                orgImage = orgImage.substring(0, orgImage.length - 1);
-                container.setAttribute('data-mood-orginal', orgImage);
-            }
-
-            var image = event.target.src;
-            index = image.indexOf('/img/mood');
-            image = image.substring(index);
-            orgImage = image.substring(0, image.length - 1);
-            container.style.backgroundImage = 'url(' + image + ')';
-        },
-        init: function () {
+        onStorageReady: function (storage, permissions) {
             var self = this;
-
+            if (!staticWeb.permissions.check && permissions.indexOf('admin') > 0) {
+                self.createInterface();
+            }
+        },
+        createInterface: function () {
             var elements = staticWeb.elements['flowertwig-moodimage'];
             for (var index = 0; index < elements.length; index++) {
                 var container = elements[index];
@@ -131,6 +82,62 @@
 
                 mood.appendChild(panel);
             }
+        },
+        save: function (container, mood) {
+            var resourceName = location.pathname.substring(1);
+            if (!resourceName || resourceName[resourceName.length - 1] == '/') {
+                resourceName += 'index.html';
+            }
+
+            var image = mood.style.backgroundImage;
+            var index = image.indexOf('/img/mood');
+            image = image.substring(index);
+            image = image.substring(0, image.length - 1);
+            mood.removeAttribute('data-mood-orginal');
+            
+            var content = mood.outerHTML;
+            content = content.replace(mood.style.backgroundImage, "url('" + image + "')");
+            
+            staticWeb.updatePage(container.id, container.tagName, resourceName, content);
+        },
+        listImages: function (container) {
+            container.style.display = 'inline-block';
+            container.innerHTML = "Loading images ...";
+
+            staticWeb.storage.list('/img/mood/', function (info, status) {
+                container.style.backgroundColor = '#fff';
+                container.style.border = 'solid 1px lightgrey';
+                container.style.color = '#000';
+
+                if (status.isOK) {
+                    var list = arguments[0];
+                    var elements = [];
+                    for (var i = 0; i < list.length; i++) {
+                        list[i]
+                        elements.push('<img src="' + list[i].path + '" width="200" title="' + list[i].name + '" style="cursor:pointer" />');
+                    }
+                    container.innerHTML = elements.join('');
+                }
+            });
+        },
+        changeImage: function (event, container) {
+            var index = 0;
+            if (!container.getAttribute('data-mood-orginal')) {
+                var orgImage = container.style.backgroundImage;
+                index = orgImage.indexOf('/img/mood');
+                orgImage = orgImage.substring(index);
+                orgImage = orgImage.substring(0, orgImage.length - 1);
+                container.setAttribute('data-mood-orginal', orgImage);
+            }
+
+            var image = event.target.src;
+            index = image.indexOf('/img/mood');
+            image = image.substring(index);
+            orgImage = image.substring(0, image.length - 1);
+            container.style.backgroundImage = 'url(' + image + ')';
+        },
+        init: function () {
+            var self = this;
         },
     }
     staticWeb.components.flowertwigMoodImage = new MoodImage();
