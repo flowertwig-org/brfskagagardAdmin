@@ -142,7 +142,8 @@
                     }
                 }
                 self.permissionTypes = types;
-                callback(storage, types).bind(self);
+                callback.call(self, storage, types);
+                //callback(storage, types).bind(self);
             }
         });
     }
