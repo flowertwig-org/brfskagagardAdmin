@@ -39,12 +39,12 @@
             for (var index = 0; index < elements.length; index++) {
                 var container = elements[index];
                 var header = container.children[0];
-                if (header.tagName.toLowerCase() == 'h1') {
+                if (!!header && header.tagName.toLowerCase() == 'h1') {
                     header.textContent = "Välkommen!";
                 }
 
                 var textElement = container.children[1];
-                if (textElement.tagName.toLowerCase() == 'p') {
+                if (!!textElement && textElement.tagName.toLowerCase() == 'p') {
                     var nOfTenents = apartmentInfo.owners.length;
                     if (nOfTenents > 1) {
                         textElement.textContent = "Nedan hittar ni först information för er och er lägenhet och längre ner generell information för alla medlemmar.";
@@ -54,7 +54,7 @@
                 }
 
                 textElement = container.children[2];
-                if (textElement.tagName.toLowerCase() == 'p') {
+                if (!!textElement && textElement.tagName.toLowerCase() == 'p') {
                     container.removeChild(textElement);
                 }
             }
@@ -63,7 +63,7 @@
             var self = this;
 
             console.log('permissions:', permissions);
-            
+
             // This method will be called by swadmin.js when storage is ready to be used.
             this.getApartmentRepo(storage, function (repoPath) {
                 // Check if we have a valid repo path

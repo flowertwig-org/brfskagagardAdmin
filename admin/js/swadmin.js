@@ -142,9 +142,8 @@
                     }
                 }
                 self.permissionTypes = types;
-                callback.call(self, storage, types);
-                //callback(storage, types).bind(self);
             }
+            callback.call(self, storage, self.permissionTypes);
         });
     }
     StaticWebDefinition.prototype.notifyComponentsOfStorageReady = function (storage, permissions) {
