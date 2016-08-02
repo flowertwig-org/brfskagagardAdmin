@@ -127,7 +127,7 @@
                 for (var permName in permissionList) {
                     if (permName.indexOf(path) === 0) {
                         // We have a match in repo names
-                        var permObj = self.permissions.storages[permName];
+                        var permObj = permissionList[permName];
                         if (permObj.required.indexOf('admin') >= 0 && currentRepo.permissions.admin) {
                             types.push(permObj.type);
                             break;
