@@ -122,7 +122,7 @@
 
                 var permissionList = self.config.permissions.storages;
                 for (var permName in permissionList) {
-                    if (permName.indexOf(path) === 0) {
+                    if (path.indexOf(permName) === 0) {
                         // We have a match in repo names
                         var permObj = permissionList[permName];
                         if (permObj.required.indexOf('admin') >= 0 && currentRepo.permissions.admin) {
