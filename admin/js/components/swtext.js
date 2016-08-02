@@ -30,7 +30,7 @@
         },
         onStorageReady: function (storage, permissions) {
             var self = this;
-            if (!staticWeb.permissions.check && permissions.indexOf('admin') > 0) {
+            if (!staticWeb.config.permissions.check && permissions.indexOf('admin') > 0) {
                 self.createInterface();
             }
         },

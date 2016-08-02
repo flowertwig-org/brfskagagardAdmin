@@ -61,8 +61,12 @@
         },
         onStorageReady: function (storage, permissions) {
             var self = this;
-
-            console.log('permissions:', permissions);
+            if (!staticWeb.config.permissions.check && permissions.indexOf('member') > 0) {
+                self.createInterface(storage, permissions);
+            }
+        },
+        createInterface: function (storage, permissions) {
+            var self = this;
 
             // This method will be called by swadmin.js when storage is ready to be used.
             this.getApartmentRepo(storage, function (repoPath) {
