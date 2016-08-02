@@ -15,6 +15,7 @@
             }
         },
         createInterface: function () {
+            var self = this;
             var elements = staticWeb.elements['flowertwig-moodimage'];
             for (var index = 0; index < elements.length; index++) {
                 var container = elements[index];
