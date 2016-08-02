@@ -34,24 +34,23 @@
             }
         },
         updateApartmentInfo: function (apartmentInfo) {
-            // Get tenant names
-            var tenents = [];
-            for (var tenentIndex = 0; tenentIndex < apartmentInfo.owners.length; tenentIndex++) {
-                var tenent = apartmentInfo.owners[tenentIndex];
-                tenents.push(tenent.name);
-            }
-
-            // Show welcome message with tenent names
+            // Show welcome message
             var elements = staticWeb.elements['flowertwig-membertest'];
             for (var index = 0; index < elements.length; index++) {
                 var container = elements[index];
                 var header = container.children[0];
                 if (header.tagName.toLowerCase() == 'h1') {
-                    header.textContent = "Välkommen " + tenents.join(' och ') + "!";
+                    header.textContent = "Välkommen!";
                 }
+
                 var textElement = container.children[1];
                 if (textElement.tagName.toLowerCase() == 'p') {
-                    textElement.textContent = "Har inget direkt att visa här, mest tänkt för att visa att det fungerar..";
+                    textElement.textContent = "Nedan hittar du först information för dig och din lägenhet och längre ner generell information för alla medlemmar.";
+                }
+
+                textElement = container.children[2];
+                if (textElement.tagName.toLowerCase() == 'p') {
+                    container.removeChild(textElement);
                 }
             }
         },
