@@ -59,8 +59,11 @@
                 }
             }
         },
-        onStorageReady: function (storage) {
+        onStorageReady: function (storage, permissions) {
             var self = this;
+
+            console.log('permissions:', permissions);
+            
             // This method will be called by swadmin.js when storage is ready to be used.
             this.getApartmentRepo(storage, function (repoPath) {
                 // Check if we have a valid repo path

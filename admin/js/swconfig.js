@@ -6,7 +6,30 @@
         'tokenService': 'https://brfskagagard-inloggning.azurewebsites.net?appName=member-test'
     }
     sw.config.user = {
-        'timeout': 60 * 60 * 24 * 7 // Time settings is stored on user device (currently: 7 days)
+        'timeout': 60 * 60 * 24 * 7, // Time settings is stored on user device (currently: 7 days)
+    };
+    sw.config.permissions = {
+        'check': true, /* Only needed if you want different accessability rights. Currently only possible when using github storage */
+        'storages': {
+            'flowertwig-org/brfskagagardAdmin': {
+                'type': 'admin',
+                'required': ['admin']
+            },
+            'flowertwig-org/brfskagagard-lgh': {
+                'type': 'member',
+                'required': ['admin', 'write', 'read']
+            }
+        },
+        'groups': [
+            {
+                'name': 'Administrator',
+                'type': 'admin',
+            },
+            {
+                'name': 'Member',
+                'type': 'member'
+            }
+        ]
     };
     sw.config.cookieName = 'staticweb-token';
     sw.config.onPage = {

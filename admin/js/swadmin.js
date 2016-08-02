@@ -15,14 +15,13 @@
         // all loaded components should store themself here.
         this.components = {};
         this.elements = {};
+        this.permissionTypes = ['visitor'];
 
         this.storage = false;
 
         // Do we have a valid token?
         if (this.hasLoggedInInfo()) {
             this.loadLoggedInState();
-            // var token = this.getToken();
-            // this.loadAdminState(token);
         }
         else {
             var link = document.getElementById('staticweb-login-link');
@@ -82,13 +81,19 @@
         var self = this;
         var adminPath = this.getAdminPath();
 
-        // TODO: check for permissions
-        this.loadComponents();
+        // load components that doesn't require permissions except 'visitor'
+        this.loadComponents(true);
 
-        // this.includeStyle(adminPath + 'css/swadmin.css');
         this.includeScript(adminPath + 'js/jStorage.js');
         this.includeScript(adminPath + 'js/swconfig.js');
         self.ensureLoaded('storage', self.config, function () {
+            // We have now loaded the StaticWeb config.
+
+            // If we should check permission, default to visitor until we know.
+            // if (self.config.permissions.check) {
+            //     self.permissionType = 'visitor';
+            // }
+
             self.ensureLoaded('jStorage', window, function () {
                 self.includeScript(adminPath + 'js/jStorage.' + self.config.storage.type + '.js');
                 self.ensureLoaded(self.config.storage.type, jStorage.providers, function () {
@@ -97,20 +102,57 @@
                     jStorageConf.callback = function (storage, callStatus) {
                         // TODO: check for permissions
                         self.loadAdminState(callStatus.isOK);
-                        self.notifyComponentsOfStorageReady(storage);
+                        //self.notifyComponentsOfStorageReady(storage);
+                        if (self.config.permissions.check) {
+                            self.checkPermissions(storage, self.notifyComponentsOfStorageReady);
+                        } else {
+                            self.notifyComponentsOfStorageReady(storage, self.permissionTypes);
+                        }
                     };
                     self.storage = jStorage(jStorageConf);
                 });
             });
         });
     }
-    StaticWebDefinition.prototype.notifyComponentsOfStorageReady = function (storage) {
+    StaticWebDefinition.prototype.checkPermissions = function (storage, callback) {
+        var self = this;
+
+        storage.listStorages(function (repos) {
+            for (var index = 0; index < repos.length; index++) {
+                var currentRepo = repos[index];
+                var path = currentRepo.path;
+                var types = self.permissionTypes;
+
+                var permissionList = self.permissions.storages;
+                for (var permName in permissionList) {
+                    if (permName.indexOf(path) === 0) {
+                        // We have a match in repo names
+                        var permObj = self.permissions.storages[permName];
+                        if (permObj.required.indexOf('admin') >= 0 && currentRepo.permissions.admin) {
+                            types.push(permObj.type);
+                            break;
+                        } else if (permObj.required.indexOf('write') >= 0 && currentRepo.permissions.write) {
+                            types.push(permObj.type);
+                            break;
+                        } else if (permObj.required.indexOf('read') >= 0 && currentRepo.permissions.read) {
+                            types.push(permObj.type);
+                            break;
+                        }
+                        currentRepo.permissions
+                    }
+                }
+                self.permissionTypes = types;
+                callback(storage, types);
+            }
+        });
+    }
+    StaticWebDefinition.prototype.notifyComponentsOfStorageReady = function (storage, permissions) {
         var self = this;
         var list = self.components;
         for (var compName in list) {
             var component = list[compName];
             if ('onStorageReady' in component) {
-                component.onStorageReady(storage);
+                component.onStorageReady(storage, permissions);
             }
         }
     }
@@ -266,7 +308,7 @@
             this.includeScript(adminPath + 'js/swonpage.js');
         }
     }
-    StaticWebDefinition.prototype.loadComponents = function () {
+    StaticWebDefinition.prototype.loadComponents = function (checkPermission) {
         var self = this;
         var adminPath = self.getAdminPath();
 
@@ -274,14 +316,30 @@
         var elements = document.getElementsByClassName('staticweb-component');
         for (var index = 0; index < elements.length; index++) {
             var element = elements[index];
-            var attr = element.attributes['data-staticweb-component'];
-            if (attr) {
+
+            if (checkPermission) {
+                var componentPermissionType = 'admin';
+
+                // check if component have set required permission type
+                var componentPermRequireAttr = element.attributes['data-staticweb-perm-type'];
+                if (componentPermRequireAttr) {
+                    componentPermissionType = componentPermRequireAttr.value;
+                }
+
+                // If component required permission isnt available, ignore it. BUT if it has specified 'visitor', automatically approve it.
+                if (componentPermissionType === 'visitor' || !self.permissionTypes.indexOf(componentPermissionType)) {
+                    continue;
+                }
+            }
+
+            var componentIdAttr = element.attributes['data-staticweb-component'];
+            if (componentIdAttr) {
                 // If this is the first component of this type, create array
-                if (!self.elements[attr.value]) {
-                    self.elements[attr.value] = [];
+                if (!self.elements[componentIdAttr.value]) {
+                    self.elements[componentIdAttr.value] = [];
                 }
                 // add element to known elements for type
-                self.elements[attr.value].push(element);
+                self.elements[componentIdAttr.value].push(element);
             }
         }
 
