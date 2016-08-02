@@ -19,17 +19,7 @@
                 'type': 'member',
                 'required': ['admin', 'write', 'read']
             }
-        },
-        'groups': [
-            {
-                'name': 'Administrator',
-                'type': 'admin',
-            },
-            {
-                'name': 'Member',
-                'type': 'member'
-            }
-        ]
+        }
     };
     sw.config.cookieName = 'staticweb-token';
     sw.config.onPage = {

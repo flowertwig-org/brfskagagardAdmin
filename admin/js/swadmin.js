@@ -100,9 +100,6 @@
                     var jStorageConf = self.config.storage;
                     jStorageConf.name = jStorageConf.type;
                     jStorageConf.callback = function (storage, callStatus) {
-                        // TODO: check for permissions
-                        self.loadAdminState(callStatus.isOK);
-                        //self.notifyComponentsOfStorageReady(storage);
                         if (self.config.permissions.check) {
                             self.checkPermissions(storage, self.notifyComponentsOfStorageReady);
                         } else {
@@ -148,6 +145,11 @@
     }
     StaticWebDefinition.prototype.notifyComponentsOfStorageReady = function (storage, permissions) {
         var self = this;
+
+        if (!self.config.permissions || permissions.indexOf('admin') >= 0) {
+        	self.loadAdminState(permissions);
+        }
+        
         var list = self.components;
         for (var compName in list) {
             var component = list[compName];
