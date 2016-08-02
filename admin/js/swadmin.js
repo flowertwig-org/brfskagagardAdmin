@@ -123,7 +123,7 @@
                 var path = currentRepo.path;
                 var types = self.permissionTypes;
 
-                var permissionList = self.permissions.storages;
+                var permissionList = self.config.permissions.storages;
                 for (var permName in permissionList) {
                     if (permName.indexOf(path) === 0) {
                         // We have a match in repo names
