@@ -16,6 +16,7 @@
             }
         },
         createInterface: function () {
+            var self = this;
             staticWeb.includeScript("//tinymce.cachefly.net/4.3/tinymce.min.js");
             staticWeb.ensureLoaded('tinymce', window, function () {
                 var elements = staticWeb.elements['flowertwig-news'];

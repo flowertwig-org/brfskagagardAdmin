@@ -10,6 +10,7 @@
     }
     Text.prototype = {
         createInterface: function () {
+            var self = this;
             staticWeb.includeScript("//cdn.tinymce.com/4/tinymce.min.js");
             staticWeb.ensureLoaded('tinymce', window, function () {
                 var elements = staticWeb.elements['swtext'];
