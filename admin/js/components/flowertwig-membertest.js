@@ -61,7 +61,7 @@
         },
         onStorageReady: function (storage, permissions) {
             var self = this;
-            if (!staticWeb.config.permissions.check && permissions.indexOf('member') > 0) {
+            if (!staticWeb.config.permissions.check || permissions.indexOf('member') > 0) {
                 self.createInterface(storage, permissions);
             }
         },
