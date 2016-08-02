@@ -45,7 +45,12 @@
 
                 var textElement = container.children[1];
                 if (textElement.tagName.toLowerCase() == 'p') {
-                    textElement.textContent = "Nedan hittar du först information för dig och din lägenhet och längre ner generell information för alla medlemmar.";
+                    var nOfTenents = apartmentInfo.owners.length;
+                    if (nOfTenents > 1) {
+                        textElement.textContent = "Nedan hittar ni först information för er och er lägenhet och längre ner generell information för alla medlemmar.";
+                    }else{
+                        textElement.textContent = "Nedan hittar du först information för dig och din lägenhet och längre ner generell information för alla medlemmar.";
+                    }
                 }
 
                 textElement = container.children[2];
