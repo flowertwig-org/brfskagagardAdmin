@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
     <meta charset="utf-8">
     <title></title>
@@ -7,7 +8,8 @@
     <link type="text/css" href="/css/style.css" rel="stylesheet" />
     <meta name="generator" content="StaticWeb" />
 </head>
-<body>
+
+<body class="staticweb-component" data-staticweb-component="flowertwig-membertest" data-staticweb-perm-type="member" id="membertest">
     <div>
         <div class="header">
             <span class="page-title"><a href="/">Brf Skagag&#229;rd</a></span>
@@ -22,18 +24,19 @@
         </div>
         <div class="staticweb-component" data-staticweb-component="flowertwig-moodimage" id="moodimage">
             <div class="mood" style="background-image: url('/img/mood/default.jpg');">
-            <div class="mood-call-to-action-container">
-                <div class="staticweb-component call-to-action" data-staticweb-component="flowertwig-membertest" data-staticweb-perm-type="member" id="membertest">
-                    <h1>Mina sidor</h1>
-                    <p>
-                        Här kan du hitta generell information för dig som medlem men även personlig information för just dig om du loggar in genom länken nedan.
-                        Dina inloggningsuppgifter sitter p&#229; insidan av dörren i proppsk&#229;pet i din lägenhet.
-                    </p>
-                    <p>
-                        <a href="https://brfskagagard-inloggning.azurewebsites.net?state=stateKeyToVerifyToken&appName=member-test" id="staticweb-login-link">Logga in</a>
-                    </p>
+                <div class="mood-call-to-action-container">
+                    <div class="call-to-action flowertwig-mypages-cta">
+                        <h1>Mina sidor</h1>
+                        <p>
+                            Här kan du hitta generell information för dig som medlem men även personlig information för just dig om du loggar in genom
+                            länken nedan. Dina inloggningsuppgifter sitter p&#229; insidan av dörren i proppsk&#229;pet i
+                            din lägenhet.
+                        </p>
+                        <p>
+                            <a href="https://brfskagagard-inloggning.azurewebsites.net?state=stateKeyToVerifyToken&appName=member-test" id="staticweb-login-link">Logga in</a>
+                        </p>
+                    </div>
                 </div>
-            </div>
             </div>
         </div>
         <!--<div class="mood" style="background-image: url(&quot;/img/mood/innergard-2015-09-26.jpg&quot;);">
@@ -50,8 +53,90 @@
             <div class="breadcrum">
                 <a href="/">Start</a> > <span class="breadcrum-current-node">Mina sidor</span>
             </div>
+
+            <div class="flowertwig-mypages-options" style="display:none">
+                <ul class="grid sw-editable" id="contentArea">
+                    <li class="grid-item width-1of3">
+                        <div class="content-menu-header">
+                            <img src="http://placehold.it/250x250">
+                        </div>
+                        <ul class="content-menu">
+                            <li class="flowertwig-mypages-options-info-building">Byggnad ?</li>
+                            <li class="flowertwig-mypages-options-info-apartment">Lgh. ?</li>
+                            <li class="flowertwig-mypages-options-info-building">? kWm</li>
+                        </ul>
+                    </li>
+                    <li class="grid-item width-1of3">
+                        <div class="content-menu-header">
+                            <img src="http://placehold.it/250x250">
+                        </div>
+                        <ul class="content-menu">
+                            <li>Information via:</li>
+                            <li class="flowertwig-mypages-options-info-delivery">?</li>
+                            <li class="flowertwig-mypages-options-info-tenents">? st</li>
+                        </ul>
+                    </li>
+                    <li class="grid-item width-1of3">
+                        <div class="content-menu-header">
+                            <img src="http://placehold.it/250x250">
+                        </div>
+                        <ul class="content-menu">
+                            <li><a href="/mypages/measurement">Inviduell mätning</li>
+                        </ul>
+                    </li>
+                </ul>
+
+            </div>
+
+            <ul class="grid sw-editable" id="contentArea">
+                <li class="grid-item width-1of3">
+                    <div class="content-menu-header">
+                        I bostaden
+                    </div>
+                    <ul class="content-menu">
+                        <!--<li>&#228;ndringar i bostaden</li>-->
+                        <li><a href="ordningsregler.html">Ordningsregler</a></li>
+                        <li><a href="care-instructions.html">Skötselråd</a></li>
+                        <li><a href="internet.html">Internet</a></li>
+                        <li><a href="tele.html">Telefoni</a></li>
+                        <li><a href="tv.html">TV</a></li>
+                        <li><a href="el.html">EL</a></li>
+                        <li><a href="heat.html">Värme</a></li>
+                        <li><a href="vatten.html">Varmvatten</a></li>
+                    </ul>
+                </li>
+                <li class="left-menu grid-item width-1of3">
+                    <div class="content-menu-header">
+                        Övriga ytor
+                    </div>
+                    <ul class="content-menu">
+                        <li><a href="parking.html">Parkering</a></li>
+                        <li><a href="laundry-room.html">Tvättstuga</a></li>
+                        <li><a href="forrad.html">Förråd</a></li>
+                        <li><a href="innergard.html">Innergården</a></li>
+                        <li><a href="barnvagnsrum.html">Barnvagnsrum</a></li>
+                        <li><a href="cykelparkering.html">Cykelparkering</a></li>
+                        <li><a href="sophantering.html">Sophantering</a></li>
+                        <li><a href="ordningsregler.html">Ordningsregler</a></li>
+                    </ul>
+                </li>
+                <li class="left-menu grid-item width-1of3">
+                    <div class="content-menu-header">
+                        Om föreningen
+                    </div>
+                    <ul class="content-menu">
+                        <li><a href="good-to-know.html">Bra att veta</a></li>
+                        <li><a href="stadgar.html">Stadgar</a></li>
+                        <li><a href="styrelse.html">Styrelse</a></li>
+                        <li><a href="ekonomi.html">Ekonomi</a></li>
+                        <li><a href="foreningsstamma.html">Föreningsstämma</a></li>
+                        <li><a href="calendar.html">Kalender</a></li>
+                    </ul>
+                </li>
+            </ul>
         </div>
     </div>
     <script async="async" src="/admin/js/swchecker.js"></script>
 </body>
+
 </html>

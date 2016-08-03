@@ -35,7 +35,7 @@
         },
         updateApartmentInfo: function (apartmentInfo) {
             // Show welcome message
-            var elements = staticWeb.elements['flowertwig-membertest'];
+            var elements = document.getElementsByClassName('flowertwig-mypages-cta');
             for (var index = 0; index < elements.length; index++) {
                 var container = elements[index];
                 var header = container.children[0];
@@ -57,6 +57,12 @@
                 if (!!textElement && textElement.tagName.toLowerCase() == 'p') {
                     container.removeChild(textElement);
                 }
+            }
+
+            var options = document.getElementsByClassName('flowertwig-mypages-options');
+            for (var index = 0; index < options.length; index++) {
+                var element = options[index];
+                element.style.display = 'block';
             }
         },
         onStorageReady: function (storage, permissions) {
