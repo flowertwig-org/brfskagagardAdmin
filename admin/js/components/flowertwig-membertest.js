@@ -59,11 +59,46 @@
                 }
             }
 
+            // Adjusting mood image height 
+            var ctaContainers = document.getElementsByClassName('mood');
+            for (var index = 0; index < ctaContainers.length; index++) {
+                var element = ctaContainers[index];
+                element.style.height = '250px';
+            }            
+
             var options = document.getElementsByClassName('flowertwig-mypages-options');
             for (var index = 0; index < options.length; index++) {
                 var element = options[index];
                 element.style.display = 'block';
             }
+
+            this.setTextOnElements('flowertwig-mypages-options-info-building', apartmentInfo.building);
+            this.setTextOnElements('flowertwig-mypages-options-info-apartment', 'Lgh. ' + apartmentInfo.id);
+            this.setTextOnElements('flowertwig-mypages-options-info-size', apartmentInfo.area);
+
+            var delivery = [];
+            for (var index = 0; index < apartmentInfo.owners.length; index++) {
+                var owner = apartmentInfo.owners[index];
+                for (var index2 = 0; index2 < owner.wayOfInfo.length; index2++) {
+                    var way = owner.wayOfInfo[index2];
+                    if(delivery.indexOf(way) === -1) {
+                        delivery.push(way);
+                    }
+                }
+            }
+
+            this.setTextOnElements('flowertwig-mypages-options-info-delivery', delivery.join(','));
+            this.setTextOnElements('flowertwig-mypages-options-info-tenents', apartmentInfo.owners.length + ' st');
+        },
+        setTextOnElements: function(className, text) {
+            var elements = document.getElementsByClassName(className);
+            for (var index = 0; index < elements.length; index++) {
+                var element = elements[index];
+                this.setTextForElement(element, text);
+            }
+        },
+        setTextForElement: function(element, text) {
+            element.innerText = text;
         },
         onStorageReady: function (storage, permissions) {
             var self = this;
