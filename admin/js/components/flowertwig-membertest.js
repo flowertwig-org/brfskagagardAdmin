@@ -74,7 +74,7 @@
 
             this.setTextOnElements('flowertwig-mypages-options-info-building', apartmentInfo.building);
             this.setTextOnElements('flowertwig-mypages-options-info-apartment', 'Lgh. ' + apartmentInfo.id);
-            this.setTextOnElements('flowertwig-mypages-options-info-size', apartmentInfo.area);
+            this.setTextOnElements('flowertwig-mypages-options-info-size', 'Storlek: ' + apartmentInfo.area + ' kWm');
 
             var delivery = [];
             for (var index = 0; index < apartmentInfo.owners.length; index++) {
@@ -88,7 +88,7 @@
             }
 
             this.setTextOnElements('flowertwig-mypages-options-info-delivery', delivery.join(','));
-            this.setTextOnElements('flowertwig-mypages-options-info-tenents', apartmentInfo.owners.length + ' st');
+            this.setTextOnElements('flowertwig-mypages-options-info-tenents', 'Boende: ' + apartmentInfo.owners.length + ' st');
         },
         setTextOnElements: function(className, text) {
             var elements = document.getElementsByClassName(className);
