@@ -48,7 +48,7 @@
             this.updatePieInfo(elements, measurementInfo.TopHeat.Text, measurementInfo.TopHeat.Rotation, measurementInfo.TopHeat.IsBig);
 
             var elements = document.getElementsByClassName('measurement-cost');
-            this.updatePieInfo(elements, measurementInfo.TopCost.Text, measurementInfo.TopCost.Rotation, measurementInfo.TopCost.IsBig);
+            this.updateCostPieInfo(elements, measurementInfo.TopCost.Text, measurementInfo.TopCost.Rotation, measurementInfo.TopCost.IsBig);
 
             var elements = document.getElementsByClassName('measurement-warmwater-similar');
             this.updatePieInfo(elements, measurementInfo.SimilarWarmwater.Text, measurementInfo.SimilarWarmwater.Rotation, measurementInfo.SimilarWarmwater.IsBig);
@@ -80,6 +80,27 @@
                 }else{
                     filler.src = '/img/graph-color-03b.png';
                     bigPiece.src = '/img/graph-color-01.png';
+                }
+
+                var textPlate = pieElement.querySelector('.measurement-value');
+                textPlate.innerText = text;
+            }
+        },
+        updateCostPieInfo: function(elements, text, degre, isBig) {
+            for (var index = 0; index < elements.length; index++) {
+                var pieElement = elements[index];
+                var filler = pieElement.querySelector('.flowertwig-pie-piece-small-filler');
+                filler.style.transform = 'rotate(' + degre + 'deg)';
+                filler.alt = text;
+
+                var bigPiece = pieElement.querySelector('.flowertwig-pie-piece-big');
+
+                if (isBig) {
+                    filler.src = '/img/graph-color-06.png';
+                    bigPiece.src = '/img/graph-color-04b.png';
+                }else{
+                    filler.src = '/img/graph-color-04b.png';
+                    bigPiece.src = '/img/graph-color-06.png';
                 }
 
                 var textPlate = pieElement.querySelector('.measurement-value');
