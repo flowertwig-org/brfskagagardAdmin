@@ -45,7 +45,7 @@
             this.updatePieInfo(elements, measurementInfo.TopWarmwater.Text, measurementInfo.TopWarmwater.Rotation, measurementInfo.TopWarmwater.IsBig);
 
             var elements = document.getElementsByClassName('measurement-heat');
-            this.updatePieInfo(elements, measurementInfo.TopWarmwater.Text, measurementInfo.TopHeat.Rotation, measurementInfo.TopHeat.IsBig);
+            this.updatePieInfo(elements, measurementInfo.TopHeat.Text, measurementInfo.TopHeat.Rotation, measurementInfo.TopHeat.IsBig);
 
             var elements = document.getElementsByClassName('measurement-cost');
             this.updatePieInfo(elements, measurementInfo.TopCost.Text, measurementInfo.TopCost.Rotation, measurementInfo.TopCost.IsBig);
