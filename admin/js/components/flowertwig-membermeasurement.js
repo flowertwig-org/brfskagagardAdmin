@@ -87,10 +87,6 @@
             }
         },
         updateCostPieInfo: function (elements, text, degre, isBig, isOver) {
-            // 60.0
-            // 338
-
-
             for (var index = 0; index < elements.length; index++) {
                 var pieElement = elements[index];
                 var filler = pieElement.querySelector('.flowertwig-pie-piece-small-filler');
