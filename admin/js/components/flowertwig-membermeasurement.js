@@ -74,7 +74,7 @@
 
                 var bigPiece = pieElement.querySelector('.flowertwig-pie-piece-big');
 
-                if (isBig) {
+                if (!isBig) {
                     filler.src = '/img/graph-color-01.png';
                     bigPiece.src = '/img/graph-color-03b.png';
                 } else {
