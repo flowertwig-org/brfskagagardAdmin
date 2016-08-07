@@ -39,66 +39,33 @@
             this.setTextOnElements('breadcrum-current-node', apartmentName)
             this.setTextOnElements('apartment-number', apartmentName)
             this.setTextOnElements('measurementMonthName', measurementInfo.TopHeader);
-            this.setTextOnElements('measurementWarmWaterConsumption', measurementInfo.TopWarmwater.Text);
+            // this.setTextOnElements('measurementWarmWaterConsumption', measurementInfo.TopWarmwater.Text);
+
+            var elements = document.getElementsByClassName('measurement-warmwater');
+            this.updatePieInfo(elements, measurementInfo.TopWarmwater.Text, measurementInfo.TopWarmwater.Rotation, measurementInfo.TopWarmwater.IsBig);
 
             this.setTextOnElements('username', measurementInfo.LoginInfo.UserName);
             this.setTextOnElements('password', measurementInfo.LoginInfo.Password);
+        },
+        updatePieInfo: function(elements, text, degre, isBig) {
+            for (var index = 0; index < elements.length; index++) {
+                var filler = pieElement.querySelector('.flowertwig-pie-piece-small-filler');
+                filler.style.transform = 'rotate(' + degre + 'deg)';
+                filler.alt = text;
 
-            // Show welcome message
-            // var elements = document.getElementsByClassName('flowertwig-mypages-cta');
-            // for (var index = 0; index < elements.length; index++) {
-            //     var container = elements[index];
-            //     var header = container.children[0];
-            //     if (!!header && header.tagName.toLowerCase() == 'h1') {
-            //         header.textContent = "Välkommen!";
-            //     }
+                var bigPiece = pieElement.querySelector('.flowertwig-pie-piece-big');
 
-            //     var textElement = container.children[1];
-            //     if (!!textElement && textElement.tagName.toLowerCase() == 'p') {
-            //         var nOfTenents = apartmentInfo.owners.length;
-            //         if (nOfTenents > 1) {
-            //             textElement.textContent = "Nedan hittar ni först information för er och er lägenhet och längre ner generell information för alla medlemmar.";
-            //         }else{
-            //             textElement.textContent = "Nedan hittar du först information för dig och din lägenhet och längre ner generell information för alla medlemmar.";
-            //         }
-            //     }
+                if (isBig) {
+                    filler.src = '/img/graph-color-01.png';
+                    bigPiece.src = '/img/graph-color-03b.png';
+                }else{
+                    filler.src = '/img/graph-color-03b.png';
+                    bigPiece.src = '/img/graph-color-01.png';
+                }
 
-            //     textElement = container.children[2];
-            //     if (!!textElement && textElement.tagName.toLowerCase() == 'p') {
-            //         container.removeChild(textElement);
-            //     }
-            // }
-
-            // // Adjusting mood image height 
-            // var ctaContainers = document.getElementsByClassName('mood');
-            // for (var index = 0; index < ctaContainers.length; index++) {
-            //     var element = ctaContainers[index];
-            //     element.style.height = '250px';
-            // }            
-
-            // var options = document.getElementsByClassName('flowertwig-mypages-options');
-            // for (var index = 0; index < options.length; index++) {
-            //     var element = options[index];
-            //     element.style.display = 'block';
-            // }
-
-            // this.setTextOnElements('flowertwig-mypages-options-info-building', apartmentInfo.building);
-            // this.setTextOnElements('flowertwig-mypages-options-info-apartment', 'Lgh. ' + apartmentInfo.id);
-            // this.setTextOnElements('flowertwig-mypages-options-info-size', 'Storlek: ' + apartmentInfo.area + ' kWm');
-
-            // var delivery = [];
-            // for (var index = 0; index < apartmentInfo.owners.length; index++) {
-            //     var owner = apartmentInfo.owners[index];
-            //     for (var index2 = 0; index2 < owner.wayOfInfo.length; index2++) {
-            //         var way = owner.wayOfInfo[index2];
-            //         if(delivery.indexOf(way) === -1) {
-            //             delivery.push(way);
-            //         }
-            //     }
-            // }
-
-            // this.setTextOnElements('flowertwig-mypages-options-info-delivery', delivery.join(','));
-            // this.setTextOnElements('flowertwig-mypages-options-info-tenents', 'Boende: ' + apartmentInfo.owners.length + ' st');
+                var textPlate = pieElement.querySelector('.measurement-value');
+                textPlate.innerText = text;
+            }
         },
         setTextOnElements: function(className, text) {
             var elements = document.getElementsByClassName(className);
