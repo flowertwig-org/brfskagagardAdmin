@@ -48,7 +48,7 @@
             this.updatePieInfo(elements, measurementInfo.TopHeat.Text, measurementInfo.TopHeat.Rotation, measurementInfo.TopHeat.IsBig);
 
             var elements = document.getElementsByClassName('measurement-cost');
-            this.updateCostPieInfo(elements, measurementInfo.TopCost.Text, measurementInfo.TopCost.Rotation, measurementInfo.TopCost.IsBig);
+            this.updateCostPieInfo(elements, measurementInfo.TopCost.Text, measurementInfo.TopCost.Rotation, measurementInfo.TopCost.IsBig, measurementInfo.TopCost.IsOver);
 
             var elements = document.getElementsByClassName('measurement-warmwater-similar');
             this.updatePieInfo(elements, measurementInfo.SimilarWarmwater.Text, measurementInfo.SimilarWarmwater.Rotation, measurementInfo.SimilarWarmwater.IsBig);
@@ -65,7 +65,7 @@
             this.setTextOnElements('username', measurementInfo.LoginInfo.UserName);
             this.setTextOnElements('password', measurementInfo.LoginInfo.Password);
         },
-        updatePieInfo: function(elements, text, degre, isBig) {
+        updatePieInfo: function (elements, text, degre, isBig) {
             for (var index = 0; index < elements.length; index++) {
                 var pieElement = elements[index];
                 var filler = pieElement.querySelector('.flowertwig-pie-piece-small-filler');
@@ -77,7 +77,7 @@
                 if (isBig) {
                     filler.src = '/img/graph-color-01.png';
                     bigPiece.src = '/img/graph-color-03b.png';
-                }else{
+                } else {
                     filler.src = '/img/graph-color-03b.png';
                     bigPiece.src = '/img/graph-color-01.png';
                 }
@@ -86,7 +86,11 @@
                 textPlate.innerText = text;
             }
         },
-        updateCostPieInfo: function(elements, text, degre, isBig) {
+        updateCostPieInfo: function (elements, text, degre, isBig, isOver) {
+            // 60.0
+            // 338
+
+
             for (var index = 0; index < elements.length; index++) {
                 var pieElement = elements[index];
                 var filler = pieElement.querySelector('.flowertwig-pie-piece-small-filler');
@@ -95,26 +99,36 @@
 
                 var bigPiece = pieElement.querySelector('.flowertwig-pie-piece-big');
 
-                if (isBig) {
-                    filler.src = '/img/graph-color-06.png';
-                    bigPiece.src = '/img/graph-color-04b.png';
-                }else{
-                    filler.src = '/img/graph-color-04b.png';
-                    bigPiece.src = '/img/graph-color-06.png';
+                if (isOver) {
+                    if (isBig) {
+                        filler.src = '/img/graph-color-05.png';
+                        bigPiece.src = '/img/graph-color-04b.png';
+                    } else {
+                        filler.src = '/img/graph-color-04b.png';
+                        bigPiece.src = '/img/graph-color-05.png';
+                    }
+                } else {
+                    if (isBig) {
+                        filler.src = '/img/graph-color-06.png';
+                        bigPiece.src = '/img/graph-color-04b.png';
+                    } else {
+                        filler.src = '/img/graph-color-04b.png';
+                        bigPiece.src = '/img/graph-color-06.png';
+                    }
                 }
 
                 var textPlate = pieElement.querySelector('.measurement-value');
                 textPlate.innerText = text;
             }
         },
-        setTextOnElements: function(className, text) {
+        setTextOnElements: function (className, text) {
             var elements = document.getElementsByClassName(className);
             for (var index = 0; index < elements.length; index++) {
                 var element = elements[index];
                 this.setTextForElement(element, text);
             }
         },
-        setTextForElement: function(element, text) {
+        setTextForElement: function (element, text) {
             element.innerText = text;
         },
         onStorageReady: function (storage, permissions) {
