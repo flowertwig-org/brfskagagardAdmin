@@ -35,7 +35,7 @@
         },
         updateMeasurementInfo: function (measurementInfo) {
             var apartmentName = 'L&#228;genhet ' + measurementInfo.Number
-            document.title = apartment;
+            document.title = apartmentName;
             this.setTextOnElements('breadcrum-current-node', apartmentName)
             this.setTextOnElements('measurementMonthName', measurementInfo.TopHeader);
             this.setTextOnElements('measurementWarmWaterConsumption', measurementInfo.TopWarmwater.Text);
