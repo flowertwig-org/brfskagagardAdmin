@@ -41,6 +41,9 @@
             this.setTextOnElements('measurementMonthName', measurementInfo.TopHeader);
             this.setTextOnElements('measurementWarmWaterConsumption', measurementInfo.TopWarmwater.Text);
 
+            this.setTextOnElements('username', measurementInfo.LoginInfo.UserName);
+            this.setTextOnElements('password', measurementInfo.LoginInfo.Password);
+
             // Show welcome message
             // var elements = document.getElementsByClassName('flowertwig-mypages-cta');
             // for (var index = 0; index < elements.length; index++) {
