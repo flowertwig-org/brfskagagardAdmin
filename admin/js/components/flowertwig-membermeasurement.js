@@ -49,6 +49,7 @@
         },
         updatePieInfo: function(elements, text, degre, isBig) {
             for (var index = 0; index < elements.length; index++) {
+                var pieElement = elements[index];
                 var filler = pieElement.querySelector('.flowertwig-pie-piece-small-filler');
                 filler.style.transform = 'rotate(' + degre + 'deg)';
                 filler.alt = text;
