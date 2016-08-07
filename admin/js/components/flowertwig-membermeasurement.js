@@ -97,11 +97,11 @@
 
                 if (isOver) {
                     if (isBig) {
-                        filler.src = '/img/graph-color-05.png';
-                        bigPiece.src = '/img/graph-color-04b.png';
-                    } else {
                         filler.src = '/img/graph-color-04b.png';
                         bigPiece.src = '/img/graph-color-05.png';
+                    } else {
+                        filler.src = '/img/graph-color-05.png';
+                        bigPiece.src = '/img/graph-color-04b.png';
                     }
                 } else {
                     if (isBig) {
