@@ -44,6 +44,24 @@
             var elements = document.getElementsByClassName('measurement-warmwater');
             this.updatePieInfo(elements, measurementInfo.TopWarmwater.Text, measurementInfo.TopWarmwater.Rotation, measurementInfo.TopWarmwater.IsBig);
 
+            var elements = document.getElementsByClassName('measurement-heat');
+            this.updatePieInfo(elements, measurementInfo.TopWarmwater.Text, measurementInfo.TopHeat.Rotation, measurementInfo.TopHeat.IsBig);
+
+            var elements = document.getElementsByClassName('measurement-cost');
+            this.updatePieInfo(elements, measurementInfo.TopCost.Text, measurementInfo.TopCost.Rotation, measurementInfo.TopCost.IsBig);
+
+            var elements = document.getElementsByClassName('measurement-warmwater-similar');
+            this.updatePieInfo(elements, measurementInfo.SimilarWarmwater.Text, measurementInfo.SimilarWarmwater.Rotation, measurementInfo.SimilarWarmwater.IsBig);
+
+            var elements = document.getElementsByClassName('measurement-heat-similar');
+            this.updatePieInfo(elements, measurementInfo.SimilarHeat.Text, measurementInfo.SimilarHeat.Rotation, measurementInfo.SimilarHeat.IsBig);
+
+            var elements = document.getElementsByClassName('measurement-warmwater-building');
+            this.updatePieInfo(elements, measurementInfo.BuildingWarmwater.Text, measurementInfo.BuildingWarmwater.Rotation, measurementInfo.BuildingWarmwater.IsBig);
+
+            var elements = document.getElementsByClassName('measurement-heat-building');
+            this.updatePieInfo(elements, measurementInfo.BuildingHeat.Text, measurementInfo.BuildingHeat.Rotation, measurementInfo.BuildingHeat.IsBig);
+
             this.setTextOnElements('username', measurementInfo.LoginInfo.UserName);
             this.setTextOnElements('password', measurementInfo.LoginInfo.Password);
         },
