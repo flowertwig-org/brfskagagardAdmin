@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8">
+    <title>L&#228;genhet ?</title>
+    <meta name="viewport" content="width=device-width" />
+    <link type="text/css" href="/style.css" rel="stylesheet" />
+    <meta name="generator" content="StaticWeb" />
+    <style>
+        .news-item:last-child {
+            margin: 0;
+            border: 0;
+        }
+        
+        .flowertwig-pie {
+            position: relative;
+            display: inline-block;
+            width: 200px;
+            height: 200px;
+            margin: auto;
+            margin-top: 40px;
+        }
+        
+        .pieContainer .flowertwig-pie {
+            margin-right: 20px;
+        }
+        
+        .flowertwig-pie-100 {
+            width: 100px;
+            height: 100px;
+        }
+        
+        .flowertwig-pie-piece-big {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            -moz-border-radius: 50%;
+            -webkit-border-radius: 50%;
+            -o-border-radius: 50%;
+            border-radius: 50%;
+            -moz-box-shadow: 1px 1px 3px #000;
+            -webkit-box-shadow: 1px 1px 3px #000;
+            -o-box-shadow: 1px 1px 3px #000;
+            box-shadow: 1px 1px 3px #000;
+        }
+        
+        .flowertwig-pie-piece-small {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            -moz-border-radius: 50%;
+            -webkit-border-radius: 50%;
+            -o-border-radius: 50%;
+            border-radius: 50%;
+            /*clip: rect(0px, 100%, 100%, 50%);*/
+            clip: rect(0px, 200px, 200px, 100px);
+        }
+        
+        .flowertwig-pie-100 .flowertwig-pie-piece-small {
+            clip: rect(0px, 100px, 100px, 50px);
+        }
+        
+        .flowertwig-pie-piece-small-filler {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            -moz-border-radius: 50%;
+            -webkit-border-radius: 50%;
+            -o-border-radius: 50%;
+            border-radius: 50%;
+            /*clip: rect(0px, 50%, 100%, 0px);*/
+            clip: rect(0px, 100px, 200px, 0px);
+            /*-webkit-transform: rotate(50deg);            -moz-transform: rotate(50deg);            -o-transform: rotate(50deg);            transform: rotate(50deg);*/
+        }
+        
+        .flowertwig-pie-100 .flowertwig-pie-piece-small-filler {
+            clip: rect(0px, 50px, 100px, 0px);
+        }
+        
+        .flowertwig-pie-inner-textplate {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 75%;
+            height: 75%;
+            -moz-border-radius: 50%;
+            -webkit-border-radius: 50%;
+            -o-border-radius: 50%;
+            border-radius: 50%;
+            background-color: #fff;
+            margin-top: 13%;
+            margin-left: 13%;
+            box-shadow: -1px -1px 3px #000;
+        }
+        
+        .flowertwig-pie-inner-textplate div {
+            margin-top: 55px;
+            text-align: center;
+        }
+        
+        .flowertwig-pie-desc {
+            position: absolute;
+            bottom: 20px;
+            text-align: left;
+        }
+        
+        .flowertwig-pie-desc .flowertwig-pie-desc-right {
+            display: inline-block;
+            float: right;
+            width: 300px;
+        }
+        
+        .content-container {
+            width: 690px;
+            margin: auto;
+        }
+        
+        .pieContainer {
+            z-index: 1;
+            text-align: center;
+        }
+        
+        .pieContainer,
+        .mood {
+            height: 430px;
+        }
+        
+        .measurement-title {
+            display: block;
+        }
+        
+        .flowertwig-pie-container {
+            text-align: center;
+            display: inline-block;
+            width: 200px;
+        }
+        
+        .flowertwig-pie-container .flowertwig-pie-inner-textplate div {
+            margin-top: 22px;
+            text-align: center;
+        }
+        
+        @media only screen and (max-width: 900px) and (min-width: 421px) {
+            .flowertwig-pie-container {
+                width: 110px;
+            }
+        }
+        
+        @media only screen and (max-width: 420px) {
+            .flowertwig-pie-container {
+                width: 100%;
+                text-align: left;
+                display: block;
+                position: relative;
+            }
+            .flowertwig-pie-container b {
+                display: block;
+                position: absolute;
+                left: 65px;
+                top: 30px;
+            }
+            .flowertwig-pie-container .flowertwig-pie-inner-textplate div {
+                margin-top: 13px;
+                text-align: left;
+                margin-left: 57px;
+                width: 100px;
+            }
+            .flowertwig-pie-container .flowertwig-pie-inner-textplate div br {
+                display: none;
+            }
+            .flowertwig-pie-container .flowertwig-pie-100 {
+                width: 50px;
+                height: 50px;
+            }
+            .flowertwig-pie-container .flowertwig-pie-100 .flowertwig-pie-piece-small {
+                clip: rect(0px, 50px, 50px, 25px);
+            }
+            .flowertwig-pie-container .flowertwig-pie-100 .flowertwig-pie-piece-small-filler {
+                clip: rect(0px, 25px, 50px, 0px);
+            }
+            .flowertwig-pie-container .flowertwig-pie-inner-textplate {
+                background-color: inherit;
+                box-shadow: inherit;
+            }
+        }
+        
+        @media only screen and (max-width: 750px) and (min-width: 431px) {
+            .mood,
+            .pieContainer {
+                height: 420px;
+            }
+            .content-container {
+                width: 400px;
+            }
+            .pieContainer .flowertwig-pie {
+                width: 100px;
+                height: 100px;
+            }
+            .pieContainer .flowertwig-pie .flowertwig-pie-piece-small {
+                clip: rect(0px, 100px, 100px, 50px);
+            }
+            .pieContainer .flowertwig-pie .flowertwig-pie-piece-small-filler {
+                clip: rect(0px, 50px, 100px, 0px);
+            }
+            .pieContainer .flowertwig-pie .flowertwig-pie-inner-textplate div {
+                margin-top: 20px;
+            }
+            .pieContainer .flowertwig-pie-desc .flowertwig-pie-desc-right {
+                float: inherit;
+            }
+            .pieContainer .measurement-type {
+                display: block;
+            }
+            .pieContainer .measurement-title {
+                position: absolute;
+                top: 95px;
+                left: 0;
+                width: 75px;
+            }
+            .pieContainer .measurement-title span {
+                display: block;
+            }
+        }
+        
+        @media only screen and (max-width: 430px) {
+            .pieContainer .flowertwig-pie {
+                display: block;
+                width: 50px;
+                height: 50px;
+                margin: 0;
+                margin-top: 10px;
+            }
+            .pieContainer .flowertwig-pie .flowertwig-pie-piece-small {
+                clip: rect(0px, 50px, 50px, 25px);
+            }
+            .pieContainer .flowertwig-pie .flowertwig-pie-piece-small-filler {
+                clip: rect(0px, 25px, 50px, 0px);
+            }
+            .pieContainer .flowertwig-pie .flowertwig-pie-inner-textplate div {
+                margin-top: 0;
+                margin-left: 60px;
+                width: 100px;
+                text-align: left;
+            }
+            .content-container {
+                width: 200px;
+            }
+            .pieContainer {
+                margin-top: 30px;
+            }
+            .pieContainer,
+            .mood {
+                height: 430px;
+            }
+            .flowertwig-pie-desc .flowertwig-pie-desc-right {
+                float: inherit;
+            }
+            .pieContainer .flowertwig-pie-inner-textplate {
+                background-color: inherit;
+                box-shadow: inherit;
+            }
+        }
+        
+        .apartment-number {
+            display: none;
+        }
+        
+        @media only print {
+            .apartment-number {
+                display: inline;
+            }
+        }
+    </style>
+</head>
+
+<body class="staticweb-component" data-staticweb-component="flowertwig-membermeasurement">
+    <div>
+        <div class="header">
+            <span class="page-title"><a href="/index.html">Brf Skagag&#229;rd</a></span>
+            <div>
+                <ul class="navigation">
+                    <li><a href="/news.html">Nyheter</a></li>
+                    <li><a href="/member.html"><strong>Medlem</strong></a></li>
+                    <li><a href="/map.html">Omr&#229;det</a></li>
+                    <li><a href="/contact.html">Kontakt</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="mood">
+            <span class="apartment-number">?</span>
+            <h1 class="content-container measurementMonthName style="text-align: center;margin-top:30px">
+            ? </h1>
+            <div class="pieContainer content-container">
+                <div class="flowertwig-pie"> <img src="/img/graph-color-03b.png" class="flowertwig-pie-piece-big" alt="3,08">
+                    <div class="flowertwig-pie-piece-small">
+                    <img src="/img/graph-color-01.png" class="flowertwig-pie-piece-small-filler" style="transform: rotate(75deg)"
+                            alt="0,81"> </div>
+                    <div class="flowertwig-pie-inner-textplate">
+                        <div> <b class="measurement-title"><span>Varm</span><span>vatten</span></b> <span class="measurementWarmWaterConsumption">?</span> <span class="measurement-type">m&#179;</span>                            </div>
+                    </div>
+                </div>
+                <div class="flowertwig-pie"> <img src="/img/graph-color-01.png" class="flowertwig-pie-piece-big" alt="0,00">
+                    <div class="flowertwig-pie-piece-small">
+                    <img src="/img/graph-color-03b.png" class="flowertwig-pie-piece-small-filler" style="transform: rotate(180deg)"
+                            alt="0,00"> </div>
+                    <div class="flowertwig-pie-inner-textplate">
+                        <div> <b class="measurement-title">V&#228;rme</b> 0,00 <span class="measurement-type">kWh</span> </div>
+                    </div>
+                </div>
+                <div class="flowertwig-pie"> <img src="/img/graph-color-06.png" class="flowertwig-pie-piece-big" alt="332,88">
+                    <div class="flowertwig-pie-piece-small">
+                    <img src="/img/graph-color-04b.png" class="flowertwig-pie-piece-small-filler" style="transform: rotate(51deg)"
+                            alt="47,24"> </div>
+                    <div class="flowertwig-pie-inner-textplate">
+                        <div> <b class="measurement-title">Avgift</b> 47,24 <span class="measurement-type">kr</span> </div>
+                    </div>
+                </div>
+                <div class="content-container flowertwig-pie-desc"> <span style="display:inline-block">                        <img src="../img/graph-color-01.png" style="width:14px;height:14px;"> Juni m&#229;nad                    </span>                    <span class="flowertwig-pie-desc-right">                        <img src="../img/graph-color-04b.png" style="width:14px;height:14px;"> F&#246;rbrukat av schablonbelopp                    </span>                    <br /> <span style="display:inline-block">                        <img src="../img/graph-color-03b.png" style="width:14px;height:14px;"> <span class="measurementMonthName">?</span>, f&#246;reg&#229;nde &#229;r                    </span>                    <span class="flowertwig-pie-desc-right"><img src="../img/graph-color-06.png" style="width:14px;height:14px"> Kvar av schablonbelopp</span>                    <span class="flowertwig-pie-desc-right"><img src="../img/graph-color-05.png" style="width:14px;height:14px"> Utnyttjad mngd utver schablonbeloppet</span>                    </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="breadcrum"> <a href="/">Start</a> > <a href="/mypages">Medlem</a> > <span class="breadcrum-current-node">L&#228;genhet 661</span>                </div>
+            <div class="sw-editable" id="contentArea">
+                <div class="news-item">
+                    <h2>Varmvatten</h2>
+                    <p>&nbsp;</p>
+                    <div>
+                        <div class="flowertwig-pie-container"><strong>Din l&#228;genhet</strong><br>
+                            <div class="flowertwig-pie flowertwig-pie-100" style="margin-top: 10px;"
+                                data-mce-style="margin-top: 10px;"><img src="/img/graph-color-03b.png" class="flowertwig-pie-piece-big" alt="" data-mce-src="/img/graph-color-03b.png">
+                                <div
+                                    class="flowertwig-pie-piece-small"><img src="/img/graph-color-01.png" class="flowertwig-pie-piece-small-filler" style="transform: rotate(75deg);"
+                                        alt="" data-mce-src="/img/graph-color-01.png" data-mce-style="transform: rotate(75deg);"></div>
+                            <div
+                                class="flowertwig-pie-inner-textplate">
+                                <div><span class="measurementWarmWaterConsumption">?</span><br>m&#179;</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flowertwig-pie-container"><strong>Liknande l&#228;genhet</strong><br>
+                    <div class="flowertwig-pie flowertwig-pie-100" style="margin-top: 10px;"
+                        data-mce-style="margin-top: 10px;"><img src="/img/graph-color-01.png" class="flowertwig-pie-piece-big" alt="" data-mce-src="/img/graph-color-01.png">
+                        <div
+                            class="flowertwig-pie-piece-small"><img src="/img/graph-color-03b.png" class="flowertwig-pie-piece-small-filler" style="transform: rotate(77deg);"
+                                alt="" data-mce-src="/img/graph-color-03b.png" data-mce-style="transform: rotate(77deg);"></div>
+                    <div
+                        class="flowertwig-pie-inner-textplate">
+                        <div>3,72<br>m&#179;</div>
+                </div>
+            </div>
+        </div>
+        <div class="flowertwig-pie-container"><strong>Din fastighet</strong><br>
+            <div class="flowertwig-pie flowertwig-pie-100" style="margin-top: 10px;" data-mce-style="margin-top: 10px;"><img src="/img/graph-color-03b.png" class="flowertwig-pie-piece-big" alt="" data-mce-src="/img/graph-color-03b.png">
+                <div
+                    class="flowertwig-pie-piece-small"><img src="/img/graph-color-01.png" class="flowertwig-pie-piece-small-filler" style="transform: rotate(137deg);"
+                        alt="" data-mce-src="/img/graph-color-01.png" data-mce-style="transform: rotate(137deg);"></div>
+            <div
+                class="flowertwig-pie-inner-textplate">
+                <div>1,52<br>m&#179;</div>
+        </div>
+    </div>
+    </div>
+    </div>
+    <p>Ovan kan du j&#228;mf&#246;ra din f&#246;rbrukning med liknande l&#228;genheter (L&#228;s: l&#228;genheter av samma storlek)
+        och din fastighet (andra l&#228;genheter i samma hus). Detta ger dig en fingervisning om&nbsp;din f&#246;rbrukning
+        &#228;r normal eller ej.</p>
+    </div>
+    <div class="news-item">
+        <h2>V&#228;rme</h2>
+        <p>Vi bor i s&#229; kallade passivhus (L&#228;s: l&#229;genergihus).&nbsp;I ett passivhus r&#228;knar man med att b&#228;ttre
+            isolering och att v&#228;rmek&#228;llor s&#229; som belysning, solinstr&#229;lning, hush&#229;llsapparater och
+            m&#228;nniskor skall klara v&#228;rmebehovet till st&#246;rsta delen.&nbsp;FTX ventialtionssystemet med v&#228;rme&#229;tervinning
+            sparar upp till 80% av fr&#229;nluftsv&#228;rmen som annars hade g&#229;tt till spillo.&nbsp;V&#228;rmaren i
+            aggregatet &#228;r dimensionerat f&#246;r att klara av att tillf&#246;ra lite extra v&#228;rme, resten skall
+            &#246;vriga v&#228;rmek&#228;llor st&#229; f&#246;r enligt ovan stycke.</p>
+        <p>V&#228;rmen i bost&#228;derna &#228;r ber&#228;knade enligt passivhusnormen, vilket inneb&#228;r en inomhustemperatur
+            p&#229; mellan 20 och 21 plusgrader.&nbsp;En grad h&#246;gre temperatur &#228;n detta orsakar upp till 15 % h&#246;gre
+            energif&#246;rbrukning</p>
+        <div>
+            <div class="flowertwig-pie-container"><strong>Din l&#228;genhet</strong><br>
+                <div class="flowertwig-pie flowertwig-pie-100" style="margin-top: 10px;"
+                    data-mce-style="margin-top: 10px;"><img src="/img/graph-color-01.png" class="flowertwig-pie-piece-big" alt="" data-mce-src="/img/graph-color-01.png">
+                    <div
+                        class="flowertwig-pie-piece-small"><img src="/img/graph-color-03b.png" class="flowertwig-pie-piece-small-filler" style="transform: rotate(180deg);"
+                            alt="" data-mce-src="/img/graph-color-03b.png" data-mce-style="transform: rotate(180deg);"></div>
+                <div
+                    class="flowertwig-pie-inner-textplate">
+                    <div>0,00<br>kWh</div>
+            </div>
+        </div>
+    </div>
+    <div class="flowertwig-pie-container"><strong>Liknande l&#228;genhet</strong><br>
+        <div class="flowertwig-pie flowertwig-pie-100" style="margin-top: 10px;" data-mce-style="margin-top: 10px;"><img src="/img/graph-color-03b.png" class="flowertwig-pie-piece-big" alt="" data-mce-src="/img/graph-color-03b.png">
+            <div
+                class="flowertwig-pie-piece-small"><img src="/img/graph-color-01.png" class="flowertwig-pie-piece-small-filler" style="transform: rotate(5deg);"
+                    alt="" data-mce-src="/img/graph-color-01.png" data-mce-style="transform: rotate(5deg);"></div>
+        <div class="flowertwig-pie-inner-textplate">
+            <div>0,50<br>kWh</div>
+        </div>
+    </div>
+    </div>
+    <div class="flowertwig-pie-container"><strong>Din fastighet</strong><br>
+        <div class="flowertwig-pie flowertwig-pie-100" style="margin-top: 10px;" data-mce-style="margin-top: 10px;"><img src="/img/graph-color-03b.png" class="flowertwig-pie-piece-big" alt="" data-mce-src="/img/graph-color-03b.png">
+            <div
+                class="flowertwig-pie-piece-small"><img src="/img/graph-color-01.png" class="flowertwig-pie-piece-small-filler" style="transform: rotate(10deg);"
+                    alt="" data-mce-src="/img/graph-color-01.png" data-mce-style="transform: rotate(10deg);"></div>
+        <div class="flowertwig-pie-inner-textplate">
+            <div>1,16<br>kWh</div>
+        </div>
+    </div>
+    </div>
+    </div>
+    <p>Ovan kan du j&#228;mf&#246;ra din f&#246;rbrukning med liknande l&#228;genheter (L&#228;s: l&#228;genheter av samma storlek)
+        och din fastighet (andra l&#228;genheter i samma hus). Detta ger dig en fingervisning om&nbsp;din f&#246;rbrukning
+        &#228;r normal eller ej.</p>
+    </div>
+    <div class="news-item">
+        <h2>Avgift</h2>
+        <p>En avgift f&#246;r v&#228;rme och varmvatten tillkommer p&#229; m&#229;nadsavgiften f&#246;r de boende. I dagsl&#228;get
+            &#228;r detta ett schablonbelopp som baseras p&#229; l&#228;genhetens storlek, och uppg&#229;r till 90kr/m2 och
+            &#229;r.</p>
+        <p>&#196;ven om detta t&#228;cker kostnaderna f&#246;r f&#246;reningen s&#229; &#228;r det ett r&#228;tt trubbigt och
+            or&#228;ttvist verktyg. Bland annat eftersom vissa l&#228;genheter betalar mer &#228;n de f&#246;rbrukar och
+            andra l&#228;genheter f&#246;rbrukar mer &#228;n de betalar.</p>
+        <p>D&#228;rf&#246;r arbetar&nbsp;styrelsen med att f&#229; ig&#229;ng den individuella m&#228;tningen av l&#228;genheternas&nbsp;f&#246;rbrukning
+            f&#246;r v&#228;rme och varmvatten s&#229; att varje medlem ist&#228;llet betalar f&#246;r den faktiska f&#246;rbrukningen
+            f&#246;r sin l&#228;genhet.<br data-mce-bogus="1"></p>
+        <p>L&#228;ngst upp kan ni se hur ni l&#229;g till <span class="measurementMonthName">?</span> m&#229;nad. Denna&nbsp;information ger vi er tillg&#229;ng till
+            i f&#246;rhoppning att det inte skall bli en chock n&#228;r vi g&#229;r &#246;ver till individuell m&#228;tning
+            och f&#246;r att ni l&#229;ngt i f&#246;rv&#228;g skall kunna ha chans att&nbsp;h&#246;ra av er till oss om n&#229;got
+            &#228;r fel/konstigt.&nbsp;</p>
+    </div>
+    <div class="news-item">
+        <h2>Avl&#228;sning/Uppf&#246;ljning</h2>
+        <p>Vi har f&#246;r avsikt att delge er liknande rapporter en tid fram&#246;ver men om ni sj&#228;lva vill kunna se er
+            f&#246;rbrukning historiskt sett kan ni&nbsp;g&#229; till <a href="http://www.minoweb.se" target="_blank">www.minoweb.se</a>            och logga in med:</p>
+        <p>Anv&#228;ndarnamn: u33056 &nbsp; &nbsp; &nbsp; &nbsp;L&#246;senord: kV5fm4yC</p>
+    </div>
+    </div>
+    </div>
+    </div>
+    <script async="async" src="/admin/js/checker.js"></script>
+</body>
+
+</html>
