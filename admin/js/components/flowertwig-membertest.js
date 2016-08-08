@@ -45,7 +45,7 @@
 
                 var textElement = container.children[1];
                 if (!!textElement && textElement.tagName.toLowerCase() == 'p') {
-                    var nOfTenents = apartmentInfo.owners.length;
+                    var nOfTenents = apartmentInfo.Owners.length;
                     if (nOfTenents > 1) {
                         textElement.textContent = "Nedan hittar ni först information för er och er lägenhet och längre ner generell information för alla medlemmar.";
                     }else{
@@ -72,15 +72,15 @@
                 element.style.display = 'block';
             }
 
-            this.setTextOnElements('flowertwig-mypages-options-info-building', apartmentInfo.building);
-            this.setTextOnElements('flowertwig-mypages-options-info-apartment', 'Lgh. ' + apartmentInfo.id);
-            this.setTextOnElements('flowertwig-mypages-options-info-size', 'Storlek: ' + apartmentInfo.area + ' kWm');
+            this.setTextOnElements('flowertwig-mypages-options-info-building', apartmentInfo.Building);
+            this.setTextOnElements('flowertwig-mypages-options-info-apartment', 'Lgh. ' + apartmentInfo.Number);
+            this.setTextOnElements('flowertwig-mypages-options-info-size', 'Storlek: ' + apartmentInfo.Size + ' kWm');
 
             var delivery = [];
-            for (var index = 0; index < apartmentInfo.owners.length; index++) {
-                var owner = apartmentInfo.owners[index];
-                for (var index2 = 0; index2 < owner.wayOfInfo.length; index2++) {
-                    var way = owner.wayOfInfo[index2];
+            for (var index = 0; index < apartmentInfo.Owners.length; index++) {
+                var owner = apartmentInfo.Owners[index];
+                for (var index2 = 0; index2 < owner.WayOfInfo.length; index2++) {
+                    var way = owner.WayOfInfo[index2];
                     if(delivery.indexOf(way) === -1) {
                         delivery.push(way);
                     }
@@ -88,7 +88,7 @@
             }
 
             this.setTextOnElements('flowertwig-mypages-options-info-delivery', delivery.join(','));
-            this.setTextOnElements('flowertwig-mypages-options-info-tenents', 'Boende: ' + apartmentInfo.owners.length + ' st');
+            this.setTextOnElements('flowertwig-mypages-options-info-tenents', 'Boende: ' + apartmentInfo.Owners.length + ' st');
         },
         setTextOnElements: function(className, text) {
             var elements = document.getElementsByClassName(className);
