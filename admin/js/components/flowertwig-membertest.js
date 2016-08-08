@@ -114,7 +114,7 @@
                 // Check if we have a valid repo path
                 if (!!repoPath) {
                     storage.get(
-                        'swconfig.json',
+                        'apartment.json',
                         function (info, status) {
                             if (status.isOK) {
                                 // Get apartment info
