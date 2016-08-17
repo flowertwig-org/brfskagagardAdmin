@@ -74,7 +74,7 @@
 
             this.setTextOnElements('flowertwig-mypages-options-info-building', apartmentInfo.Building);
             this.setTextOnElements('flowertwig-mypages-options-info-apartment', 'Lgh. ' + apartmentInfo.Number);
-            this.setTextOnElements('flowertwig-mypages-options-info-size', 'Storlek: ' + apartmentInfo.Size + ' kWm');
+            this.setTextOnElements('flowertwig-mypages-options-info-size', 'Storlek: ' + apartmentInfo.Size);
 
             var delivery = [];
             for (var index = 0; index < apartmentInfo.Owners.length; index++) {
